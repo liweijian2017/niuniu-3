@@ -46,7 +46,6 @@ cc.Class({
     //叫倍选择(阻塞)设置回调
     showMultipleWin:function () {
         //1.显示倍数弹框
-        console.log('等待用户闲着倍数...');
         this.selectMultipleWin.active = true;
         //2.监听用户点击
         this.node.on('SELECT_MULTIPLE', function(event){
@@ -62,7 +61,6 @@ cc.Class({
         this.node.on('PLAYER_SELECT_MULTIPLE', function(event){
                 this.palyerMultipleWin.active = false;
                 this.playerMultiple = event.getUserData().msg;
-                console.log("闲家选择的倍数: " + this.playerMultiple);
         }, this);
     },
     
@@ -79,6 +77,12 @@ cc.Class({
     //关闭计算窗口
     closeResultPanel:function () {
         this.resultPanel.active = false;
+    },
+    closeSelectMultipleWin:function () {
+        this.selectMultipleWin.active = false;
+    },
+    closePalyerMultipleWin:function () {
+        this.palyerMultipleWin.active = false;
     },
     
 });

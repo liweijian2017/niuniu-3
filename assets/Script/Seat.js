@@ -1,3 +1,4 @@
+var ImageLoader = require('ImageLoader');
 /**
  * 基本座位类
  */
@@ -54,7 +55,6 @@ cc.Class({
             default:null,
             type:cc.Sprite
         }
-        
     },
     //初始化
     onLoad: function () {
@@ -77,6 +77,7 @@ cc.Class({
             this.nameLabel.string = this.nameStr;
             this.scoreLabel.string = this.score;
             this.pointLabel.string = this.point;
+
             //叫倍更新
             if(this.multiple >= 0){
                 this.multipleLabel.node.active = true;
@@ -97,8 +98,16 @@ cc.Class({
             }
         }
     },
-    
-    
+    //更新头像
+    updataHeadImg:function (url) {
+        //头像更新
+        var self = this;
+        var url = ImageLoader.load(url, function(ret, node){
+            if(ret) {
+                self.headImg.getComponent(cc.Sprite).spriteFrame = node.getComponent(cc.Sprite).spriteFrame;  
+            }                   
+        });
+    },
     
     //坐庄
     toBeBanker:function () {
@@ -121,6 +130,9 @@ cc.Class({
             this.score = userData.score;
             this.point = userData.point;
             //TODO 更新头像
+            if(userData.imgUrl){
+                this.updataHeadImg(userData.imgUrl);
+            }
             this.updateSeat();
         }
     },

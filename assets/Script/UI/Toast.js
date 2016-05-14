@@ -37,5 +37,15 @@ cc.Class({
     onFadeOutFinish: function () {
         this.node.position = this.outOfWorld;
     },
-
+    
+    show:function(){
+        this.node.emit('TOAST_IN');
+        this.scheduleOnce(function() {
+            this.hide();
+        }, 1);
+    },
+    
+    hide:function(){
+        this.node.emit('TOAST_OUT');
+    }
 });
