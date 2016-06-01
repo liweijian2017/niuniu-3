@@ -1336,6 +1336,10 @@ var egret;
             this.data.setUint8(this.position++, value);
         };
 
+        p.writeBuf = function(bytes){
+            this.writeBytes(bytes);
+        };
+
         p.readStringBytes = function(len){
             return this.readUTFBytes(len);
         };
@@ -1352,6 +1356,11 @@ var egret;
             if (!this.validate(ByteArray.SIZE_OF_BOOLEAN))
                 return null;
             return this.data.getUint8(this.position++);
+        };
+
+        //fix string
+        p.readBuf = function(len){
+            return this.readUTFBytes(len);
         };
 
         p.setPos = function(pos){

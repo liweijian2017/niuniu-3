@@ -3,6 +3,8 @@ var P = require('GAME_SOCKET_PROTOCOL');
 var Http = require('Http');
 var SchedulerPool = require('SchedulerPool');
 var GameData = require('GameData');
+var BroadcastReceiver = require('BroadcastReceiver');
+
 var GameSocket = cc.Class({
 	extends: SocketService,
 	ctor : function(){
@@ -15,10 +17,14 @@ var GameSocket = cc.Class({
 		this.mapFun = {
 			[P.SVR_LOGIN_RET] : this.SVR_LOGIN_RET,
 			[P.SVR_DOUBLE_LOGIN] : this.SVR_DOUBLE_LOGIN,
-			[P.GET_ROOM_RET] : this.GET_ROOM_RET
+			[P.GET_ROOM_RET] : this.GET_ROOM_RET,
+			[P.SVR_JOIN_SUCCESS] : this.SVR_JOIN_SUCCESS,
+			[P.BROADCAST_DIAMOND_CHANGE_RET]: this.BROADCAST_DIAMOND_CHANGE_RET,
+			[P.BROADCAST_MONEY_CHANGE_RET]: this.BROADCAST_MONEY_CHANGE_RET,
+		 	[P.BROADCAST_ALL_MESSAGE_RET] : this.BROADCAST_ALL_MESSAGE_RET, //喇叭
 		};
 	},
-	
+
 	onProcessPacket: function(pack){
 		if(typeof(this.mapFun[pack.cmd]) == 'function')
 			this.mapFun[pack.cmd].call(this, pack);
@@ -31,6 +37,11 @@ var GameSocket = cc.Class({
 	onAfterConnectFailure: function(){
 		this.isLogin = false;
 		//提示网络异常 连接失败 重新连接
+		var self = this;
+		var canvas = cc.director.getScene().getChildByName('Canvas');
+        canvas.getComponent('PopUp').showDlg("网络异常，重新连接服务器！", function(){
+        	self.connect(self.ip_, self.port_);
+        });
 	},
 
 	onClose:function(evt){
@@ -77,18 +88,22 @@ var GameSocket = cc.Class({
 
     // 加入房间
 	sendJoinRoom:function(tid){
-		this.sendData(P.ENTER_ROOM, {uid : Http.userData.uid, tid : tid});
+		this.sendData(P.ENTER_ROOM, {uid : Http.userData.uid, tid : parseInt(tid)});
 	},
-	
+
+	//快速开始
+	sendQuickStart:function(){
+		this.sendData(P.QUICK_START, {uid : Http.userData.uid, money : Http.userData.point});
+	},
 
 	// 离开房间
 	sendLeaveRoom: function(){
 		this.sendData(P.CLI_LEAVE, {uid : Http.userData.uid});
-	},	
+	},
 
 	// 坐下
 	sendSitDown:function(seatId){
-		this.sendData(P.CLI_SIT_DOWN, {uid : Http.userData.uid, seatId: seatId});
+		this.sendData(P.CLI_SIT_DOWN, {uid : Http.userData.uid, seatId: parseInt(seatId)});
 	},
 
 	// 站起
@@ -98,9 +113,24 @@ var GameSocket = cc.Class({
 
 	// 操作  叫庄（betX = 0 不叫   5 .. 倍数 ） ， 叫倍（betX = 倍数） ， 是否有牛（ betX =  0没牛 1有牛）
 	sendDo:function(betX){
-		this.sendData(P.CLI_DO, {uid : Http.userData.uid, betX : betX});
+		this.sendData(P.CLI_DO, {uid : Http.userData.uid, betX : parseInt(betX)});
 	},
 
+	// 发表情
+	sendExpression:function(expressionId){
+		this.sendMsg_(0, parseInt(expressionId), "");
+	},
+
+	// 发文字聊天
+	sendMessage: function(content){
+		this.sendMsg_(1, 0, content);
+	},
+
+	// 聊天 typeId 0 发表情 1 发文字, expressionId 表情id, content: 聊天文字内容  
+	sendMsg_:function(typeId, expressionId, content){
+		this.sendData(P.CLI_SEND_ROOM_BROADCAST, {uid: Http.userData.uid, tid: typeId, param: expressionId, content: content});
+	},
+	
 	getUserInfo: function(){
 		var u = Http.userData;
 		return {
@@ -129,6 +159,24 @@ var GameSocket = cc.Class({
 				cc.info(cmdData);
 				this.sendData(cmdData[0], cmdData[1]);
 			};
+
+			if(pack.tid > 0)
+			{
+			 	this.pause();
+
+          		var canvas = cc.director.getScene().getChildByName('Canvas');
+            	canvas.getComponent('PopUp').showLoadding();
+			 	this.sendJoinRoom(pack.tid);
+			}
+			else
+			{				
+				if( GameData.IN_GAME == 1 )
+				{
+					var canvas = cc.director.getScene().getChildByName('Canvas');
+	            	canvas.getComponent('PopUp').showLoadding("网络异常，正在离开房间");
+					cc.director.loadScene('MainScene');
+				}
+			}
 		}
 	},
 
@@ -139,10 +187,32 @@ var GameSocket = cc.Class({
 	},
 
 	SVR_DOUBLE_LOGIN: function(pack){
-		cc.info("重复登录，断开连接");
 		this.disconnect(false);
+		var canvas = cc.director.getScene().getChildByName('Canvas');
+        canvas.getComponent('PopUp').showDlg("重复登录，断开连接！", function(){
+        	if(window.gotoHome)
+        	{
+        		window.gotoHome();
+        	}
+        });
 	},
 
+	SVR_JOIN_SUCCESS: function(pack){
+		cc.director.loadScene('TableScene');
+	},
+
+	BROADCAST_DIAMOND_CHANGE_RET: function(pack){
+		Http.userData.score = pack.diamond;
+	},
+
+	BROADCAST_MONEY_CHANGE_RET: function(pack){
+		Http.userData.point = pack.money;
+	},
+
+	//接受到喇叭消息
+    BROADCAST_ALL_MESSAGE_RET:function(pack){
+        BroadcastReceiver.addMessageToList(pack);
+    },
 });
 
 module.exports = GameSocket;

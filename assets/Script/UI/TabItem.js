@@ -36,9 +36,11 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        
+
+        this.chujiPressed();
     },
     
+    //初级场按钮被按下
     chujiPressed: function (type) {
 
         this.btnPressed('chuji');
@@ -110,18 +112,18 @@ cc.Class({
         var type = type || 1;
         var Http = require('Http');
 
-        Http.getRoomList(function(data1){
+        me.getRoomListReq_ = Http.getRoomList(function(data1){
 
             me.listInfo = data1;
 
-            Http.getOnline(type, function(data2){
+            me.getOnlieReq_ = Http.getOnline(type, function(data2){
 
             me.tIdAndOnlineInfo = data2;   
 
             me.listInfoInType = me.getInfo(me.listInfo, me.tIdAndOnlineInfo);
     
             for(var i = 0; i < me.listInfoInType.length; i++) {
-                    var c = cc.instantiate(me.roomItemPrefab);
+                    var c = cc.instantiate(me.roomItemPrefab);                    
                     c.getComponent('RoomItem').setData(me.listInfoInType[i][0], me.listInfoInType[i][1], me.listInfoInType[i][2], me.listInfoInType[i][3]);
                     me.scrollView.content.addChild(c);
                 }
@@ -138,21 +140,26 @@ cc.Class({
 
         var listInfoInType = [];   
 
-        for(var tid1 in tIdAndOnlineInfo){
+        for(var tid1 in tIdAndOnlineInfo['data']){
 
-            var onLineNum = tIdAndOnlineInfo[tid1];
+            var onLineNum = tIdAndOnlineInfo['data'][tid1];
 
             for(var i = 0; i < listInfo.length; i++){
 
                 var tid2 = listInfo[i][0];
 
                 if(tid1 == tid2){
-                    listInfoInType.push([tid1, listInfo[i][3], listInfo[i][2], onLineNum]);
+                    listInfoInType.push([tid1, listInfo[i][3], listInfo[i][2], onLineNum]);                                                                                
                     break;
                 }
             }
         }
 
         return listInfoInType;
+    },
+
+    onDestroy: function(){
+        Http.cancelRequest(this.getRoomListReq_);
+        Http.cancelRequest(this.getOnlieReq_);
     }
 });

@@ -54,11 +54,11 @@ var PacketBuilder = cc.Class({
         }else if (dtype == TYPE.LONG) {
             val = Number(val) || 0
             var absVal = Math.abs(val)
-            var low = absVal % Math.pow(2, 32)
+            var low = absVal % Math.pow(2, 31)
             if (val < 0) {
                 low = -low
             }
-            var high = Math.floor(absVal / Math.pow(2, 32))
+            var high = Math.floor(absVal / Math.pow(2, 31))
             if (val < 0) {
                 high = -high
             }
@@ -72,7 +72,9 @@ var PacketBuilder = cc.Class({
             buf.writeUInt(low)
         }else if (dtype == TYPE.STRING) {
             val = String(val) || ""
-            buf.writeUInt(val.length + 1)
+            var tmp = new Socket.ByteArray();
+            var strlength = tmp.encodeUTF8(val).length
+            buf.writeUInt(strlength + 1)
             buf.writeStringBytes(val)
             buf.writeByte(0)
         }else if (dtype == TYPE.BUF) {

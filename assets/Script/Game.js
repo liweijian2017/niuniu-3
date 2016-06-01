@@ -3,25 +3,26 @@
 */
 var Http = require('Http');
 var GameSocket = require('GameSocket');
-var Game;
-Game = cc.Class({
+var P = require('GAME_SOCKET_PROTOCOL');
+var BroadcastReceiver = require('BroadcastReceiver');
+var Router = require('Router');
+var Game = cc.Class({
     extends: cc.Component,
-    properties: {},
-    statics: {
-        instance: null
+    properties: {
+        boradcastItemPrefab:{
+            default:null,
+            type:cc.Prefab
+        },
+    },   
+    onLoad: function () {      
+        if(!Game.socket) {
+            var list = Http.getConfigData().serverList[0];
+            Game.socket = new GameSocket();
+            Game.socket.connect(list[0], list[1]);            
+        };
+        //初始化广播接收器
+        Router.boradcastItemPrefab = this.boradcastItemPrefab;
+        BroadcastReceiver.init(); //初始化
     },
-
-    // use this for initialization
-    onLoad: function () {
-        Game.instance = this;
-
-        var list = Http.getConfigData().serverList[0];
-        this.socket = new GameSocket();
-        this.socket.connect(list[0], list[1]);
-
-       /* this.socket.addEventListener(GameSocket.EVT_PACKET_RECEIVED, function(event){
-            cc.info(event.data);
-        }, this);   */      
-    },
-
 });
+

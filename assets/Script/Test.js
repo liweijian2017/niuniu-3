@@ -28,7 +28,7 @@ cc.Class({
         }, function(data){
             cc.info(data);
         });
-        Http.cancelRequest(xhr);
+        //Http.cancelRequest(xhr);
         
 
         //DataProxy 测试
@@ -51,13 +51,16 @@ cc.Class({
         userData.name = 'world';
         
         userData.point = 2222;
-
-        var list = Http.getConfigData().serverList[0];
+        
+        /*var list = Http.getConfigData().serverList[0];
         var gameSocket = new GameSocket();
         gameSocket.connect(list[0], list[1]);
-        gameSocket.sendJoinRoom(1);
-        
+        gameSocket.sendJoinRoom(1);*/
+        //gameSocket.sendSitDown(0);
         //server测试
+
+        cc.info("testest");
+
     },
 
     // called every frame, uncomment this function to activate update callback

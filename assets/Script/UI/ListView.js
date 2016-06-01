@@ -10,17 +10,16 @@ cc.Class({
         	default: null,
         	type: cc.ScrollView
         },
-        spawnCount: 0, // how many items we actually spawn
-        totalCount: 0, // how many items we need for the whole list
-        spacing: 0, // space between each item
-        bufferZone: 0, // when item is away from bufferZone, we relocate it
+        spawnCount: 0, // 复用item的个数
+        totalCount: 0, // 总数量
+        spacing: 0, // 间距
+        bufferZone: 0, // 复用空间(和view组件高度差不多)
     },
 
     // use this for initialization
     onLoad: function () {
     	this.content = this.scrollView.content;
         this.items = []; // array to store spawned items
-    	this.initialize();
         this.updateTimer = 0;
         this.updateInterval = 0.2;//控制每秒刷新时间
         this.lastContentPosY = 0; // use this variable to detect if we are scrolling up or down
@@ -36,6 +35,25 @@ cc.Class({
             this.items.push(item);
     	}
     },
+
+    initializeForData:function(list){
+        this.items = [];
+        this.content.height = 0;
+        this.content.removeAllChildren();
+
+        this.content.height = list.length * (this.itemTemplate.height + this.spacing) + this.spacing; // get total content height
+        for (let i = 0; i < this.spawnCount; ++i) { // spawn items, we only need to do this once
+            if(i >= list.length)return;
+            let item = cc.instantiate(this.itemTemplate);
+            item.getComponent('ListView_Item').setDataSource(list); //设置数据源
+            this.content.addChild(item);
+            item.setPosition(0, -item.height * (0.5 + i) - this.spacing * (i + 1));
+            item.getComponent('ListView_Item').updateItem(i, i);
+            //解析数据
+            this.items.push(item);
+        };
+    },
+
 
     getPositionInView: function (item) { // get item position in scrollview's node space
         let worldPos = item.parent.convertToWorldSpaceAR(item.position);
@@ -66,7 +84,6 @@ cc.Class({
                 if (viewPos.y > buffer && items[i].y - offset > -this.content.height) {
                     items[i].setPositionY(items[i].y - offset );
                     let item = items[i].getComponent('ListView_Item');
-                    console.log('itemID: ' + item.itemID);
                     let itemId = item.itemID + items.length;
                     item.updateItem(i, itemId);
                 }

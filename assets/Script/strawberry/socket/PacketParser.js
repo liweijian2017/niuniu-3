@@ -139,7 +139,7 @@ var PacketParser = cc.Class({
         }else if (dtype == TYPE.LONG){
             var high = buf.readInt()
             var low = buf.readInt()
-            ret = high * Math.pow(2, 32) + low
+            ret = high * Math.pow(2, 31) + low
         }else if (dtype == TYPE.ULONG){
             var high = buf.readUInt()
             var low = buf.readUInt()
@@ -197,24 +197,27 @@ var PacketParser = cc.Class({
             }else{
                 // 配置文件中直接指定了长度
                 len = thisFmt.fixedLength
-            }
+            }            
             if (len > 0) {
-                if (contentFmt.length == 1) {
+                if ((contentFmt instanceof Array) && (contentFmt.length == 1)) {
                     var dtype = contentFmt[0].type
                     for (var i = 0; i < len; i++) {
-                        if (typeof(contentFmt[1].depends) == 'function')
+                        if (typeof(contentFmt[1].depends) == 'function'){
                             if (contentFmt[1].depends(ctx)) 
                                 ret[ret.length] = this.readData_(ctx, buf, dtype, contentFmt[0])                            
-                        else            
-                            ret[ret.length] = this.readData_(ctx, buf, dtype, contentFmt[0])                        
+                        }else{            
+                            ret[ret.length] = this.readData_(ctx, buf, dtype, contentFmt[0])
+                        }                        
                     };
-                }else if (contentFmt.length == 0 && contentFmt.type){                    
-                    for (var i = 0; i < len; i++) {
-                        if (typeof(contentFmt.depends) == 'function')
+                }else if (!(contentFmt instanceof Array) && (contentFmt.type != undefined)){
+                    for (var i = 0; i < len; i++) {                        
+                        if (typeof(contentFmt.depends) == 'function'){
                             if (contentFmt.depends(ctx))
-                                ret[ret.length] = this.readData_(ctx, buf, contentFmt.type, contentFmt)                            
-                        else
-                            ret[ret.length] = this.readData_(ctx, buf, contentFmt.type, contentFmt)                        
+                                ret[ret.length] = this.readData_(ctx, buf, contentFmt.type, contentFmt);
+                        }else{
+                            ret[ret.length] = this.readData_(ctx, buf, contentFmt.type, contentFmt);                           
+                        }
+                             
                     }
                 }else{
                     for (var i = 0; i < len; i++) {
@@ -260,7 +263,7 @@ var PacketParser = cc.Class({
                     var dtype = v.type
                     var depends = v.depends
                     if (typeof(depends) == 'function'){
-                        if (depends(ret)){
+                        if (depends(ret)){                           
                             var fpos = buf.getPos()
                             ret[name] = this.readData_(ret, buf, dtype, v)
                             var epos = buf.getPos()

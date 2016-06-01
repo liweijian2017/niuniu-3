@@ -37,7 +37,7 @@ cc.Class({
             if(3 == this.numbers.length){//当前状态是3
                 this.handSeat.getComponent('HandPoker').addPokerTouch();
                 //禁用有牛按钮
-                this.but0.getComponent(cc.Button).interactable = false;
+                this.but0.getComponent(cc.Button).interactable = true;
             }
             var index = this.numbers.indexOf(-num);
             this.numbers.splice(index, 1);
@@ -52,8 +52,10 @@ cc.Class({
         this.labels[3].string = count;
         //判断结果
         if( 3 == this.numbers.length){
-            if(count%10 == 0) {//'有牛'
-                //修改按钮状态
+            if(this.isNiu(this.numbers)){//修改按钮状态
+                this.but0.getComponent(cc.Button).interactable = true;
+            }
+            if(count%10 == 0) {//'有牛'//修改按钮状态
                 this.but0.getComponent(cc.Button).interactable = true;
             }
             //关闭事件
@@ -69,14 +71,20 @@ cc.Class({
             }
         }
     },
+    //清空计算框
+    clearAll:function () {
+        this.numbers = [];
+        this.labels[3].string = 0+'';
+        this.updateLabels();
+    },
+    
+    isNiu:function (arr) {
+        var one = arr[0];
+        for(var i=0; i<arr.length; i++){
+            if(arr[i] != one){ //一旦发现不相等
+                return false;                
+            }
+        }
+        return true;
+    }
 });
-
-
-// Array.prototype.indexOf = function(el){
-//  for (var i=0,n=this.length; i<n; i++){
-//   if (this[i] === el){
-//    return i;
-//   }
-//  }
-//  return -1;
-// }

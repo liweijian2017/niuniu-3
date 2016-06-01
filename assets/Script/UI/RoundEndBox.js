@@ -1,3 +1,4 @@
+var Util = require('Util');
 cc.Class({
     extends: cc.Component,
 
@@ -8,160 +9,129 @@ cc.Class({
             default: [],
             type: cc.Node
         },
-
         meIcon: {
             default: null,
             type: cc.Sprite
         },
-
         meProperty: {
             default: null,
             type: cc.Label
         },
-
-        player1Name: {
+        playerLayout:{
             default: null,
-            type: cc.Label
+            type: cc.Node
         },
-
-        player1Icon: {
+        itemPrefab:{
             default: null,
-            type: cc.Sprite
-        },
-
-        player1Property: {
-            default: null,
-            type: cc.Label
-        },
-
-        bankerSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-
-        player2Name: {
-            default: null,
-            type: cc.Label
-        },
-
-        player2Icon: {
-            default: null,
-            type: cc.Sprite
-        },
-
-        player2Property: {
-            default: null,
-            type: cc.Label
-        },
-
-        player3Name: {
-            default: null,
-            type: cc.Label
-        },
-
-        player3Icon: {
-            default: null,
-            type: cc.Sprite
-        },
-
-        player3Property: {
-            default: null,
-            type: cc.Label
-        },
-
-        player4Name: {
-            default: null,
-            type: cc.Label
-        },
-
-        player4Icon: {
-            default: null,
-            type: cc.Sprite
-        },
-
-        player4Property: {
-            default: null,
-            type: cc.Label
+            type: cc.Prefab
         }
+        
     },
 
     // use this for initialization
     onLoad: function () {
-
+        this.disabledUnderTouch();
+    },
+    start: function () {
+    },
+    
+    setSelf:function () {
         
     },
-
-    start: function () {
-        this.showPrompt();
-    },
-
-    //according to the result of the round,set the proper title(win,lose,draw)
-    //0:win  1: lose  2:draw
+    
+    //设置类型,1:win 2:lose
     setTitle: function (result) {
-
         if(result === 0){
-            
             this.titles[0].active = true; //WinTitle
             this.titles[1].active = false; //LoseTitle
             this.titles[2].active = false; //DrawTitle
-
         }else if(result === 1){
-
             this.titles[0].active = false; //WinTitle
             this.titles[1].active = true; //LoseTitle
             this.titles[2].active = false; //DrawTitle
-
         }else if(result === 2){
-
             this.titles[0].active = false; //WinTitle
             this.titles[1].active = false; //LoseTitle
             this.titles[2].active = true; //DrawTitle
         }
     },
-
-    //set player's name
-    setPlayerName: function (nameLabel, name) {
-
-        if(nameLabel){
-
-            nameLabel.string = name || '***';
-        }
-    },
-
-    //set player's property
+    //
     setProperty: function (propertyLabel, property) {
-
         if(property > 0){
-
             propertyLabel.node.color = new cc.Color(255, 255, 0);
             propertyLabel.string = '+' + property;
-
         }else{
-
             propertyLabel.node.color = new cc.Color(255, 0, 0);
             propertyLabel.string = property + '';
-
         }
     }, 
-
-    //set all player's icon
-    //if player1 is banker, set bankerSprite's active with true, else set false
-    setIcon: function () {
+    //设置数据
+    showRoundBox: function (type, overPlayers, selfSeat) {
+        var selfChange = 0;
+        for(var i=0; i<overPlayers.length; i++){
+            if(overPlayers[i].player.id == selfSeat.getComponent("SelfSeat").id){
+                selfChange = overPlayers[i].change;
+                break;
+            }
+            var item = cc.instantiate(this.itemPrefab);
+            var data = { //数据
+                name:overPlayers[i].player.nameStr,
+                change:overPlayers[i].change,
+                img:overPlayers[i].player.headImg.getComponent(cc.Sprite).spriteFrame,
+            };
+            item.getComponent('Item').initData(data);
+            this.addItem(item);
+        };
+        
+        if(selfChange > 0){
+            this.setTitle(0);
+            cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_win.mp3'));
+        }else if(selfChange < 0){
+            this.setTitle(1);
+            cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_lose.mp3')); 
+        }
+        
+        if(selfSeat){
+            if(this.meIcon) {
+                this.meIcon.getComponent(cc.Sprite).spriteFrame = selfSeat.getComponent("SelfSeat").headImg.getComponent(cc.Sprite).spriteFrame;    
+                this.meProperty.string = selfChange >= 0 ? ('+'+Util.bigNumToStr2(selfChange)) : Util.bigNumToStr2(selfChange);
+            }
+        }        
         
     },
+    //该Box出现时，阻止其之外的所有组件接收点击事件
+    disabledUnderTouch: function () {
+        this.node.on('mousedown', function (event) {
+          event.stopPropagation();
+        }, this);
+        this.node.on('touchstart', function (event) {
+          event.stopPropagation();
+        }, this);
+    },
+    addItem:function (node) {
+        var layout = this.playerLayout;
+        layout.addChild(node);
+    },
+    removeAllItem:function () {
+        if(this.playerLayout){
+            this.playerLayout.removeAllChildren(); 
+        }
 
-    //show prompt box
-    showPrompt: function () {
-        this.setTitle(1);
-        this.setPlayerName(this.player1Name, 'ackkk');
-        this.setPlayerName(this.player2Name, 'qweqw');
-        this.setPlayerName(this.player3Name, 'wwer');
-        this.setPlayerName(this.player4Name, 'dfre');
-
-        this.setProperty(this.meProperty, -200000);
-        this.setProperty(this.player1Property, 200000);
-        this.setProperty(this.player2Property, -200000);
-        this.setProperty(this.player3Property, 0);
-        this.setProperty(this.player4Property, 600000);
+    },
+    //显示
+    show:function (time, cb) {
+        this.node.emit('fade-in');
+        var self = this;
+        setTimeout(function () {
+            self.hide();
+            if(cb)cb();
+        }, time*1000);
+    },
+    //隐藏
+    hide:function () {
+        if(this.node){
+            this.node.emit('fade-out');
+        }
+        this.removeAllItem();
     }
 });

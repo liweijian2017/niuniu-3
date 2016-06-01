@@ -164,9 +164,11 @@ var HttpService = {
     },
 
     //取消请求
-    cancelRequest:function(id){   
-      this.requests[id].status = 0;
-      this.requests[id].xhr.abort();
+    cancelRequest:function(id){  
+      if(id && this.requests[id]){ 
+        this.requests[id].status = 0;
+        this.requests[id].xhr.abort();
+      }
     }
 }
 

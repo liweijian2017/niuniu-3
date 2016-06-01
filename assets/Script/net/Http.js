@@ -12,7 +12,7 @@ var Http  = require('Http');
   }, function(error){
       cc.info(error);
   });
-  Http.cancelRequest(reqId);
+   
 ~~~
 */
 var HttpService = require('HttpService');
@@ -20,12 +20,12 @@ var DataProxy = require('DataProxy');
 //debug data
 if(!window.USERDATA){
 	window.USERDATA = {
-		point: 40000,
-		score: 4000,
-		uid:   543,
-		sk:    'f8e57ea08b957905dc50c511bf69b888',
-		name:  'ALeo',
-		image:　'http://game.manyouwei.cn/assets/photo/n544.jpg',
+		point: 5000000,
+		score: 125768,
+		uid:   14,  //544, 4087, 4203, 7490
+		sk:    'abc58ipalmplay85abc',
+		name:  '莫莫',
+		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
 		xmlevel: 1, 
 		token: '',
 		isNew: 0	};
@@ -33,15 +33,16 @@ if(!window.USERDATA){
 
 if(!window.CONFIGDATA){
   window.CONFIGDATA = {
-    roomList: 'http://game.manyouwei.cn/assets/niuniu/roomlist/201505132006.json',
-    serverList: [['121.40.24.158', '9902'], ['121.40.24.158', '9902']]
+    apiUrl: "http://game-dev.manyouwei.cn/dice/api.php",
+    roomList: 'http://game.manyouwei.cn/assets/niuniu/roomlist/20160517192004.json',
+    serverList: [['192.168.1.100', '9902'], ['192.168.1.100', '9902']]
   };
 }
 //end debug data
-HttpService.init("http://game.manyouwei.cn/dice/api.php");
+HttpService.init(window.CONFIGDATA.apiUrl);
 HttpService.setSessionKey(window.USERDATA.uid, window.USERDATA.sk);
 
-var http = {   
+var http = {
   	/*
   	  获得用户基本信息
   	  @return {
@@ -91,7 +92,7 @@ var http = {
       data = {count : 180} //count 在线人数
     */
     getOnlineAll:function(resultCallback, errorCallback){
-      return HttpService.request("game.getOnlineAll", {}, resultCallback, errorCallback);
+      return HttpService.request("niuniu.getOnlineAll", {}, resultCallback, errorCallback);
     },
 
     /*
@@ -102,7 +103,7 @@ var http = {
       data = {"1": 5, "2": 3} //{房间id： 人数}
     */
     getOnline:function(type, resultCallback, errorCallback){
-      return HttpService.request("game.getOnline", {type: type}, resultCallback, errorCallback);
+      return HttpService.request("niuniu.getOnline", {type: type}, resultCallback, errorCallback);
     },
  
     /*
@@ -112,7 +113,26 @@ var http = {
       data = {tid: 1} 房间id
     */
     quickGame:function(resultCallback, errorCallback){
-      return HttpService.request("game.quickGame", {}, resultCallback, errorCallback);
+      return HttpService.request("niuniu.quickGame", {}, resultCallback, errorCallback);
+    },
+
+    /*
+      财富排行榜
+      @return 
+      resultCallback(data)
+      data = {list: [{image: "http://example.com/xx.jpg", name: "Aleo", point: 1200},{image: "http://example.com/xx.jpg", name: "Aleo", point: 1000}, ...]}
+    */
+    getTop:function(resultCallback, errorCallback){
+      return HttpService.request("game.top", {}, resultCallback, errorCallback);
+    },
+
+    /*
+      积分排行榜
+      resultCallback(data)
+      data = {list: [{image: "http://example.com/xx.jpg", name: "Aleo", score: 1200},{image: "http://example.com/xx.jpg", name: "Aleo", score: 1000}, ...]}
+    */
+    getScoreTop:function(resultCallback, errorCallback){
+      return HttpService.request("game.scoreTop", {}, resultCallback, errorCallback);
     }
 };
 

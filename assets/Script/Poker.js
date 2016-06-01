@@ -6,6 +6,7 @@ cc.Class({
         touchEvent:null,
         type:1, //花色
         value:2, //数值
+        scale:1, //缩放比例
         isMoving:false,  //是否在移动中(暂时未使用到该属性)
         isSelect:false, //是否被选中
         isActive:true, //激活状态才能响应点击事件
@@ -92,19 +93,20 @@ cc.Class({
         }
         // var key = 'card_value_big_'+ typeStr +'_' + this.value;
         var key = 'card_value_big_'+ typeStr +'_' + (this.value==1?14:this.value);
-        this.valueLabel.spriteFrame = this.spriteAtlas.getSpriteFrame(key+".png");        
+        this.valueLabel.spriteFrame = this.spriteAtlas.getSpriteFrame(key);        
         var key2 = 'card_variety_small_'+typeStr+'_' + typeStr2;
-        this.typeLabel.spriteFrame = this.spriteAtlas.getSpriteFrame(key2+".png");
+        this.typeLabel.spriteFrame = this.spriteAtlas.getSpriteFrame(key2);
         var key3 = 'card_variety_big_' + typeStr + '_' +typeStr2;
         if(this.value > 10) {
             key3 += ('_' + this.value)
         }
-        this.bigTypeLabel.spriteFrame = this.spriteAtlas.getSpriteFrame(key3+".png");
+        this.bigTypeLabel.spriteFrame = this.spriteAtlas.getSpriteFrame(key3);
         if(this.show){
             this.back.node.active = false;
         }else {
             this.back.node.active = true;
         }
+        this.node.setScale(this.scale);
     },
     
     getValue:function(cardUint){

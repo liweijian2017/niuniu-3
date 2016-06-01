@@ -38,10 +38,11 @@ cc.Class({
         this.node.position = this.outOfWorld;
     },
     
-    show:function(){
+    show:function(cb){
         this.node.emit('TOAST_IN');
         this.scheduleOnce(function() {
             this.hide();
+            if(cb)cb();
         }, 1);
     },
     

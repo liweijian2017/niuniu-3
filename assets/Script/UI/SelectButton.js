@@ -31,6 +31,13 @@ cc.Class({
         var event =  new cc.Event.EventCustom('COUNT_HANDLEPOKER', true);
         event.setUserData({msg:this.id});//0有牛按钮 1没牛按钮
         this.node.dispatchEvent(event);
-    }
+    },
+
+    //发送榜单切换事件
+    // handleChengeListEvent:function(){
+    //     var event =  new cc.Event.EventCustom('CHANGE_LIST', true);
+    //     event.setUserData({msg:this.id});//0财富榜 1积分榜
+    //     this.node.dispatchEvent(event);
+    // }
     
 });

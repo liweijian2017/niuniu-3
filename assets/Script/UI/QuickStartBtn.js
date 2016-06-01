@@ -1,3 +1,5 @@
+var Http = require("Http");
+var Game = require("Game");
 cc.Class({
     extends: cc.Component,
 
@@ -20,7 +22,24 @@ cc.Class({
 
     //quick start button which in the room list was pressed
     quickStartPressed: function () {
-
-        cc.info('quick start button was pressed');
+       //Http.quickGame(function(data){
+           //cc.info(data);
+           //loading
+           var canvas = cc.director.getScene().getChildByName('Canvas');
+           if(Http.userData.point < 1500)
+           {
+              canvas.getComponent('PopUp').showDlg('您的游戏币不足,去充值吗？', function(){
+                  if(window.gotoPay)
+                      window.gotoPay();
+              }, function(){});
+           }
+           else
+           {
+             Game.socket.pause();
+             
+             canvas.getComponent('PopUp').showLoadding();
+             Game.socket.sendQuickStart();
+          }
+       //});
     }
 });

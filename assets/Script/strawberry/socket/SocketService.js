@@ -18,7 +18,7 @@ var SocketService = cc.Class({
         this.isConnecting_   = false
         this.isPaused_       = false
         this.delayPackCache_ = null
-        this.retryLimit_     = 5
+        this.retryLimit_     = 10
         this.heartBeatSchedulerPool_ = new SchedulerPool();
 
         return this
@@ -58,6 +58,7 @@ var SocketService = cc.Class({
     },
 
     disconnect: function(noEvent){
+        cc.info('disconnect', noEvent);
         this.shouldConnect_ = false;
         this.isConnecting_ = false;
         this.isConnected_ = false;
@@ -109,11 +110,11 @@ var SocketService = cc.Class({
         this.isConnecting_ = false;
         this.heartBeatTimeoutCount_ = 0;
         this.onAfterConnected();
-        this.retryLimit_ = 5;
+        this.retryLimit_ = 10;
         this.dispatchEventWith(SocketService.EVT_CONN_SUCCESS);
     },
 
-    onClose: function(evt){
+    onClose: function(evt){        
         this.isConnected_ = false;
         this.unscheduleHeartBeat();
         if (this.shouldConnect_) {
@@ -147,6 +148,8 @@ var SocketService = cc.Class({
 
     onConnectFailure: function(evt){
         this.isConnected_ = false;
+        this.isConnecting_ = false;
+        
         cc.info("connect failure ...");
         if(!this.reconnect_()){       
             this.onAfterConnectFailure();
@@ -235,14 +238,15 @@ var SocketService = cc.Class({
     },
 
     reconnect_: function(){
-        this.disconnect(true);
+        cc.info('try reconnect_')
+        if(this.isConnected_)
+            this.disconnect(true);
         this.retryLimit_ = this.retryLimit_ - 1;
         var isRetrying = true; 
-        if (this.retryLimit_ > 0 || this.retryConnectWhenFailure_){
+        if (this.retryLimit_ > 0 || this.retryConnectWhenFailure_){            
             this.connect(this.ip_, this.port_, this.retryConnectWhenFailure_);
         }else{
-            isRetrying = false;
-            this.isConnecting_ = false;
+            isRetrying = false;            
         }    
         return isRetrying;
     },

@@ -59,6 +59,15 @@ CONFIG[P.ENTER_ROOM] = {
     ]    
 }
 
+P.QUICK_START = 0x3012 
+CONFIG[P.QUICK_START] = {
+    ver : 1,
+    fmt : [
+        {name : "uid", type : T.UINT},
+        {name : "money", type : T.ULONG}
+    ]
+}
+
 // 获取房间返回
 P.GET_ROOM_RET = 0x3020
 CONFIG[P.GET_ROOM_RET] = {
@@ -124,9 +133,9 @@ CONFIG[P.CLI_SEND_ROOM_BROADCAST] = {
     ver : 1,
     fmt : [
         {name:"uid", type:T.UINT},
-        {name:"tid"     , type:T.INT}    , //tid
-        {name:"param"   , type:T.INT}    , //预留int
-        {name:"content" , type:T.STRING} , //内容
+        {name:"tid"     , type:T.INT}    , //tid  typeId （0 发表情 1 发文字）  
+        {name:"param"   , type:T.INT}    , // expressionId 表情id
+        {name:"content" , type:T.STRING} , //内容 content: 聊天文字内容
     ]
 }
 
@@ -183,7 +192,7 @@ CONFIG[P.SVR_JOIN_SUCCESS] = {
         {name : "seatNum"      , type : T.BYTE}   , //座位数
         {name : "roundCount"   , type : T.UINT}   , //牌局数id
         {name : "dealerSeatId" , type : T.BYTE}   , //前一局庄家座位ID
-        {name : "venue"        , type : T.BYTE}   , //台费比例       
+        {name : "venue"        , type : T.USHORT}   , //台费比例       
         {    //每个用户的信息(已经坐下的)
             name:"playerList",
             type:T.ARRAY,

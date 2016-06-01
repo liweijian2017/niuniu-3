@@ -30,16 +30,48 @@ var Util = {
     },
 
     /*
-      12000 = 1.2万 
+      12000 = 1.20 w 
     */
     bigNumToStr:function(num){
         var str = num;
-        if(num >= 10000)
+        if(num >= 100000){
+            str = (num/10000).toFixed(2) + "万";
+        }else {
+            str = this.formatMoney(num);
+        }
+        return str;
+    },
+    //12000 = 1.2w
+    bigNumToStr2:function(num){
+        var str = num;
+        if(num >= 10000){
             str = (num/10000) + "万";
+        }else if(num <= -10000){
+            str = (num/10000) + "万";
+        }
         return str;
     },
 
 
+    //格式化名字
+    formatName:function(str, num){
+        var len = 0;
+        var newStr = str;
+        var count = 0;
+        for (var i = 0; i < str.length; i++) { 
+            if (str[i].match(/[^x00-xff]/ig) != null){ //全角 
+                len += 2;
+                count++; //记录中文字符个数
+            } else {
+                len += 1;
+            }
+            if (len >= num) { 
+                newStr = str.substring(0, num - count) + "...";
+                break;
+            }
+        }
+        return newStr;
+    }
 };
 
 module.exports = Util;
