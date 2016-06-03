@@ -82,20 +82,22 @@ cc.Class({
     },
 
     //叫倍选择(阻塞)设置回调
-    showMultipleWin:function () {
-        //1.显示倍数弹框
+    showMultipleWin:function (minBuyIn) {
         this.selectMultipleWin.active = true;
-        //2.监听用户点击
+        var max = Math.floor(this.point/minBuyIn);
+        console.log("玩家抢庄限制: " + Util.bigNumToStr(this.point) + ' / ' + Util.bigNumToStr(minBuyIn) + ' = ' + max);
+        this.selectMultipleWin.getComponent('BtnsControl').show(max);
         this.node.on('SELECT_MULTIPLE', function(event){
-            //3.拿到倍数显示
             this.setMultiple(event.getUserData().msg);
-            //4.关闭窗口
             this.selectMultipleWin.active = false;
         }, this);
     },
       
-    showPalyerMultipleWin:function () {
+    showPalyerMultipleWin:function (bankerPoint, blind) {
+        var max = Math.floor(Math.min(bankerPoint, this.point) / blind / 3);
+        console.log("玩家叫倍限制: " + Util.bigNumToStr(bankerPoint) + ' / ' + Util.bigNumToStr(blind) + ' = ' + max);
         this.palyerMultipleWin.active = true;
+        this.palyerMultipleWin.getComponent('BtnsControl').show(max);
         this.node.on('PLAYER_SELECT_MULTIPLE', function(event){
                 this.palyerMultipleWin.active = false;
                 this.playerMultiple = event.getUserData().msg;
@@ -187,6 +189,7 @@ cc.Class({
                     ep.removeFromParent();
                 }, this);               
                 this.userInfoPabel.addChild(ep);
+                //帧动画
                 var scaleAni = cc.scaleTo(0.2, 1.7);
                 scaleAni.easing(cc.easeBackOut()); 
                 ep.runAction(cc.sequence(scaleAni,cc.delayTime(1),move, cc.fadeOut(0.5, 0), cf));

@@ -38,9 +38,6 @@
       },
       {
         "__id__": 211
-      },
-      {
-        "__id__": 213
       }
     ],
     "_localZOrder": 0,
@@ -7888,54 +7885,5 @@
     "boradcastItemPrefab": {
       "__uuid__": "391af4f2-1f88-404f-b79a-8ac1ab43524f"
     }
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "BroadcastReceiver",
-    "_objFlags": 0,
-    "_opacity": 255,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_cascadeOpacityEnabled": true,
-    "_parent": {
-      "__id__": 1
-    },
-    "_anchorPoint": {
-      "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
-    },
-    "_contentSize": {
-      "__type__": "cc.Size",
-      "width": 0,
-      "height": 0
-    },
-    "_children": [],
-    "_rotationX": 0,
-    "_rotationY": 0,
-    "_scaleX": 1,
-    "_scaleY": 1,
-    "_position": {
-      "__type__": "cc.Vec2",
-      "x": 180,
-      "y": 260
-    },
-    "_skewX": 0,
-    "_skewY": 0,
-    "_localZOrder": 0,
-    "_globalZOrder": 0,
-    "_tag": -1,
-    "_opacityModifyRGB": false,
-    "_reorderChildDirty": false,
-    "_id": "47b988III5PA7bNSxoVEWcX",
-    "_active": true,
-    "_components": [],
-    "_prefab": null,
-    "groupIndex": 0
   }
 ]

@@ -12,7 +12,7 @@ var Http  = require('Http');
   }, function(error){
       cc.info(error);
   });
-   
+  Http.cancelRequest(reqId);
 ~~~
 */
 var HttpService = require('HttpService');
@@ -20,9 +20,9 @@ var DataProxy = require('DataProxy');
 //debug data
 if(!window.USERDATA){
 	window.USERDATA = {
-		point: 5000000,
+		point: 20000,
 		score: 125768,
-		uid:   14,  //544, 4087, 4203, 7490
+		uid:   28,  //544, 4087, 4203, 7490
 		sk:    'abc58ipalmplay85abc',
 		name:  '莫莫',
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
@@ -39,7 +39,7 @@ if(!window.CONFIGDATA){
   };
 }
 //end debug data
-HttpService.init(window.CONFIGDATA.apiUrl);
+HttpService.init(3, window.CONFIGDATA.apiUrl);
 HttpService.setSessionKey(window.USERDATA.uid, window.USERDATA.sk);
 
 var http = {

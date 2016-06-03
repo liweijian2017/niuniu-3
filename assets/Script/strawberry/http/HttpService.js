@@ -7,8 +7,9 @@ var HttpService = {
     sk: '',
     requests : {},
 
-    init: function(apiUrl){
+    init: function(appId, apiUrl){
     	this.apiUrl = apiUrl;
+      this.appId = appId;
     },
 	
 	//设置登录key
@@ -76,7 +77,7 @@ var HttpService = {
     request:function(method, param, resultCallback, errorCallback){
           param = param || {};
           var postParam = {
-              appId: 3,
+              appId: this.appId,
               uid: this.uid,
               sk: this.sk,
               action: method,

@@ -331,6 +331,14 @@ cc.Class({
         }
         return uid;
     },
+    //获取用户的钱
+    getUserPoint:function(){
+        var point = null;
+        if(this.hold){
+            point = this.userData.point;
+        }
+        return point;
+    },
     //获取到用户的基本信息
     getUserData:function(){
         var user = null;

@@ -5,14 +5,23 @@ var BroadcastReceiver = {
     //添加一个广播消息
     //{"message":"{\"username\":\"Tester\",\"content\":\"test info.\",\"type\":\"broadcast\",\"senderUid\":0,\"delay\":1}","cmd":28695}
     isRun:false,
-
+    isInit:false,
     init:function(){
+        if(BroadcastReceiver.isInit)return;
         //场景切换成功后
         cc.director.on(cc.Director.EVENT_AFTER_SCENE_LAUNCH, function(event) {
             if(!BroadcastReceiver.isRun){
                 BroadcastReceiver.runBroadcast();
             }
+            if(cc.director.getScene().getChildByName('Game')){
+                // console.log('主场景加载完毕');
+                cc.director.preloadScene('TableScene', function(err){
+                    if(err)console.err(err);
+                    // console.log('桌子场景预加载完毕');
+                });
+            }
         });
+        BroadcastReceiver.isInit = true;
     },
 
     addMessageToList:function(pack){

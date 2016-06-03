@@ -39,6 +39,8 @@ cc.Class({
         IsSit:false, //用户自己是否已经坐下
         gameStatus:0, //房间状态
         finalPokerType:0, //最终牌型
+        minBuyIn:0, //入场筹码需求数量
+        blind:0, //盲注
         roomName:{
             default:null,
             type:cc.Label
@@ -205,7 +207,7 @@ cc.Class({
         var userData = {
             name:Http.userData.name,
             score:Http.userData.score,
-            point: seatChips,
+            point: seatChips, //筹码数量由网络确定
             imgUrl:Http.userData.image,
             uid:Http.userData.uid
         }
@@ -398,24 +400,40 @@ cc.Class({
         this.chatWin.setPosition(cc.p(3000, 0)); 
         this.chatWin.active = false;
     },
-
-    //成功加入房间
-    SVR_JOIN_SUCCESS:function (pack) {
-        var self = this;
+    //提示台费和积分规则
+    showTabelInfo:function(pack){
         var size = cc.director.getWinSizeInPixels();
         var taifei = Math.floor((pack.venue / 100) * pack.blind);
         var sendScore = Math.floor(taifei*0.85);
         var hintStr = '每局扣'+ Util.bigNumToStr2(taifei) +'台费，获得'+ Util.bigNumToStr2(sendScore)+'积分';
-        //提示
         this.popupToast(cc.p(0, size.height/2-60), 5, hintStr, true);
+    },
+    //如果庄家存在车设置专家
+    handleBanker:function(pack){
+        //pack.dealerSeatId
+        this.handleAllSeats(function(seat){
+            if(seat.id == pack.dealerSeatId){
+                self.bankerSeat = seat;
+            }
+        });
+    },
+    //成功加入房间
+    SVR_JOIN_SUCCESS:function (pack) {
+        var self = this;
+        this.showTabelInfo(pack); //台费提示
+        this.roomName.string = pack.roomName + " 底分:" + Util.bigNumToStr2(pack.blind); //底分提示
 
-        this.roomName.string = pack.roomName + " 底分:" + Util.bigNumToStr2(pack.blind);
+        this.minBuyIn = pack.minBuyIn; //最小携带
+        this.blind = pack.blind; //盲注
         this.gameStatus = pack.gameStatus;
         this.playerList = pack.playerList;
         this.seatImportData(pack.playerList); //设置所有座位数据
 
         var reconnection = false;
         var selfPlayer = null;
+
+        this.handleBanker(pack);
+
         //接入房间
         for(var i=0;i<pack.playerList.length;i++){
             if(pack.playerList[i].uid == Http.userData.uid){ //如果是自己
@@ -440,7 +458,7 @@ cc.Class({
                 switch(selfPlayer.state){ //自己的状态
                     case 1: //游戏已经开始,有4张牌
                         if(self.IsSit){
-                            self.selfSeat.getComponent('SelfSeat').showMultipleWin();
+                            self.selfSeat.getComponent('SelfSeat').showMultipleWin(self.minBuyIn);
                             cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3')); 
                             self.popupToast(null, 5, '请抢庄:');
                         }
@@ -451,7 +469,7 @@ cc.Class({
                             this.popupToast(null, 5, '等待玩家选择倍数:');
                             this.selfSeat.getComponent('SelfSeat').setMultiple(selfPlayer.betX);
                         }else{
-                            this.selfSeat.getComponent('SelfSeat').showPalyerMultipleWin();
+                            this.selfSeat.getComponent('SelfSeat').showPalyerMultipleWin(this.bankerSeat.point ,this.blind);
                             cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3'));
                             this.popupToast(null, 5, '请选择倍数:');
                         }
@@ -550,7 +568,7 @@ cc.Class({
                     //判断自己是否是庄家
                     var selfSeat = this.selfSeat.getComponent('SelfSeat');
                     if(selfSeat.id != this.bankerSeat.id){ //如果自己是庄家,则结束
-                        selfSeat.showPalyerMultipleWin();
+                        selfSeat.showPalyerMultipleWin(this.bankerSeat.point ,this.blind);
                         //给出倒计时文字提示
                         cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3'));
                         this.popupToast(null, pack.timeout, '请选择倍数:');
@@ -619,7 +637,7 @@ cc.Class({
                     self.selfSeat.getComponent('SelfSeat').showHandPoker();
                     //如果玩家做下 提供玩家叫庄
                     if(self.IsSit){
-                        self.selfSeat.getComponent('SelfSeat').showMultipleWin();
+                        self.selfSeat.getComponent('SelfSeat').showMultipleWin(self.minBuyIn);
                         cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3')); 
                         self.popupToast(null, pack.timeout, '请抢庄:');
                     }
