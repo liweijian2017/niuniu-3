@@ -59,11 +59,7 @@ cc.Class({
             self.scoreLabel.string = Util.bigNumToStr(this.score);     
         });
     },
-    
-    // showPokers:function () {
-    //     console.log('自己的座位,不需要开牌');
-    // },
-    
+
     //拿到4张牌,设置可见
     getFourPoker:function (data) {
         //拿到的对象为(自己的手牌类对象)
@@ -95,7 +91,7 @@ cc.Class({
       
     showPalyerMultipleWin:function (bankerPoint, blind) {
         var max = Math.floor(Math.min(bankerPoint, this.point) / blind / 3);
-        console.log("玩家叫倍限制: " + Util.bigNumToStr(bankerPoint) + ' / ' + Util.bigNumToStr(blind) + ' = ' + max);
+        console.log("玩家叫倍限制: " + Util.bigNumToStr(bankerPoint) + ' / ' + Util.bigNumToStr(blind) + ' /3 = ' + max);
         this.palyerMultipleWin.active = true;
         this.palyerMultipleWin.getComponent('BtnsControl').show(max);
         this.node.on('PLAYER_SELECT_MULTIPLE', function(event){
@@ -177,22 +173,22 @@ cc.Class({
     },
     //添加消息
     addChatMsg:function(pack){
+        var self = this;
         switch(pack.tid){ //类型:0表情 1文字
             case 0 : 
-                var spriteFrame = Router.expressionAtlas.getSpriteFrame('expression-'+ pack.param);
-                var ep = new cc.Node();
-                ep.addComponent(cc.Sprite);
-                ep.getComponent(cc.Sprite).spriteFrame = spriteFrame;
-                ep.setScale(0.1);
-                var move = cc.moveBy(0.8, 0, 50); 
-                var cf = cc.callFunc(function(){
-                    ep.removeFromParent();
-                }, this);               
-                this.userInfoPabel.addChild(ep);
-                //帧动画
-                var scaleAni = cc.scaleTo(0.2, 1.7);
-                scaleAni.easing(cc.easeBackOut()); 
-                ep.runAction(cc.sequence(scaleAni,cc.delayTime(1),move, cc.fadeOut(0.5, 0), cf));
+                cc.loader.loadRes("expression/expression_"+ pack.param, cc.SpriteAtlas, function (err, atlas) {
+                    if(err)console.log(err);
+                    else {
+                        var ep = new cc.Node();
+                        var frameAnimation = ep.addComponent('FrameAnimation');
+                        frameAnimation.init(atlas, 'expression-' + pack.param + '-0001');
+                        self.userInfoPabel.addChild(ep);
+                        frameAnimation.autoAddFrame('expression-' + pack.param + '-000', 2);
+                        frameAnimation.run(function(){
+                            ep.removeFromParent();
+                        });
+                    }
+                });
                 break;
             case 1 : 
                 var label = new cc.Node();

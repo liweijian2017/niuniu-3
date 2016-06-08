@@ -20,9 +20,9 @@ var DataProxy = require('DataProxy');
 //debug data
 if(!window.USERDATA){
 	window.USERDATA = {
-		point: 20000,
+		point: 1500,
 		score: 125768,
-		uid:   28,  //544, 4087, 4203, 7490
+		uid:   27,  //544, 4087, 4203, 7490
 		sk:    'abc58ipalmplay85abc',
 		name:  '莫莫',
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
@@ -133,6 +133,27 @@ var http = {
     */
     getScoreTop:function(resultCallback, errorCallback){
       return HttpService.request("game.scoreTop", {}, resultCallback, errorCallback);
+    },
+
+    /*
+     获取破产次数
+     resultCallback(data)
+     data = {bankruptCount: 2,  reward: {chips: 2000}}   bankruptCount:剩余领取次数， chips:可以领取的游戏币数
+
+     errorCallback(error)
+     error = {ret: 1203}    1203 破产补助已经用完，去充值
+    */
+    getBankruptInfo:function(resultCallback, errorCallback){
+      return HttpService.request("bankrupt.getInfo", {}, resultCallback, errorCallback);
+    },
+
+    /*
+       领取
+       resultCallback(data)
+       data = {chips: 10000}
+    */
+    getBankruptReward:function(resultCallback, errorCallback){
+      return HttpService.request("bankrupt.getReward", {}, resultCallback, errorCallback);
     }
 };
 

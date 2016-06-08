@@ -44,6 +44,7 @@ cc.Class({
     //设置房间信息（id、下限、底分、人数）
     setData: function (roomId, minBuyin, sblind, onlineNum) {
         this.roomId.string = roomId || '0';
+        this.minBuyinInt = minBuyin;
         this.minBuyin.string = Util.bigNumToStr2(minBuyin) || '0';
         this.sblind.string = Util.bigNumToStr2(sblind) || '0'; 
         this.onlineNum.string = Util.bigNumToStr2(onlineNum) || '0';
@@ -56,7 +57,7 @@ cc.Class({
     //判断玩家是否有资格进入该房间
     isRoomAccessed: function () {
         var userPoint = 0;
-        var minPoint = parseInt(this.minBuyin.string) || 999999999999;
+        var minPoint = parseInt(this.minBuyinInt);
         var Http = require('Http');
         if(Http.userData.point >= minPoint){
             return true;
@@ -71,18 +72,18 @@ cc.Class({
             return;
         var accessed = this.isRoomAccessed();
         var canvas = cc.director.getScene().getChildByName('Canvas');
-        if(accessed){
+        //if(accessed){
             cc.info("enter room ");          
             canvas.getComponent('PopUp').showLoadding();
             Game.socket.sendJoinRoom(parseInt(this.roomId.string));
             Game.socket.pause();            
-        }else{
+        /*}else{
             cc.info('item pressed');
             canvas.getComponent('PopUp').showDlg('您的游戏币不足，不能进入该房间。去充值吗？', function(){
                     if(window.gotoPay)
                       window.gotoPay();
             }, function(){});
-        }
+        }*/
     },    
 
 

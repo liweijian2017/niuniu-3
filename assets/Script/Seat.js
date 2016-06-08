@@ -83,12 +83,10 @@ cc.Class({
     //初始化
     onLoad: function () {
     },
-    
     start:function(){
         //渲染空位,设置空位数值
         this.updateSeat();
     },
-    
     //更新座位显示
     updateSeat:function(){
         //类型更新
@@ -201,8 +199,26 @@ cc.Class({
         this.point = 0;
         this.updateSeat();
         this.userData = null;
+        this.handSeat.getComponent('HandPoker').removePokers(); //移除所有手牌
+        this.scoreValue = null;
     },
     
+    clearUserData:function(){
+        this.id = -2; //表示被自己坐下的位置id
+        this.hold = false;// 设置离开状态
+        this.state = -1;
+        this.name = '空座';
+        this.score = 0;
+        this.point = 0;
+        this.updateSeat();
+        this.userData = null;
+        this.handSeat.getComponent('HandPoker').removePokers(); //移除所有手牌
+        this.scoreValue = null;
+        //移除所有动作
+        // cc.director.getActionManager().removeAllActionsFromTarget(this.node);
+        if(this.node.getChildByTag(1000))this.node.removeChildByTag(1000);
+    },
+
     //设置请求坐庄状态(叫庄)
     setMultiple:function (multiple) {
         this.multiple = multiple;//设置叫庄状态
@@ -214,6 +230,7 @@ cc.Class({
         this.playerMultiple = multiple;//设置叫庄状态
         this.updateSeat();
     },
+
     closePlayerMultiple:function () {
         this.playerMultiple = 0;
         this.updateSeat();
@@ -281,6 +298,7 @@ cc.Class({
     },
     //改变 point
     countScore:function (point) {
+        if(this.state < 0) return;
         var self = this;
         this.point += point;
         //出现动画   
@@ -291,21 +309,19 @@ cc.Class({
 
         label.getComponent(cc.Label).string = (point > 0 ? "+" : "-") + Util.bigNumToStr(Math.abs(point));
         label.opacity = 0;
-        label.parent = this.node;
+        // label.parent = this.node;
+        this.node.addChild(label, 1000, 1000);
         var pt = this.pointLabel.node.getPosition();
         pt.x = pt.x + 40;
         pt.y = pt.y + 20;
         label.setPosition(pt);
         label.runAction(cc.sequence(cc.delayTime(2), cc.fadeIn(0.1), cc.delayTime(0.3), cc.moveBy(0.8, 0, 30), cc.fadeOut(0.2), cc.callFunc(function(){
             this.removeFromParent();
-        }, label)));        
+        }, label)));
     },
     //设置分数
     setScore:function (score) {
         this.point = score;
-        //出现动画
-        // var changeNum = score - this.point;
-        // hint.getComponent('ChangeHint').show(pos, changeNum);
     },
     //移除自己
     removeFromParent:function () {
@@ -372,21 +388,22 @@ cc.Class({
     },
     //显示聊天信息
     addChatMsg:function(pack){
+        var self = this;
         switch(pack.tid){ //类型:0表情 1文字
             case 0 : 
-                var spriteFrame = Router.expressionAtlas.getSpriteFrame('expression-'+ pack.param);
-                var ep = new cc.Node();
-                ep.addComponent(cc.Sprite);
-                ep.getComponent(cc.Sprite).spriteFrame = spriteFrame;
-                ep.setScale(0.1);
-                var move = cc.moveBy(0.8, 0, 50); 
-                var cf = cc.callFunc(function(){
-                    ep.removeFromParent();
-                }, this);     
-                this.userInfoPabel.addChild(ep);
-                var scaleAni = cc.scaleTo(0.2, 1.7);
-                scaleAni.easing(cc.easeBackOut()); 
-                ep.runAction(cc.sequence(scaleAni,cc.delayTime(1),move, cc.fadeOut(0.5, 0), cf));
+                cc.loader.loadRes("expression/expression_"+ pack.param, cc.SpriteAtlas, function (err, atlas) {
+                    if(err)console.log(err);
+                    else {
+                        var ep = new cc.Node();
+                        var frameAnimation = ep.addComponent('FrameAnimation');
+                        frameAnimation.init(atlas, 'expression-' + pack.param + '-0001');
+                        self.userInfoPabel.addChild(ep);
+                        frameAnimation.autoAddFrame('expression-' + pack.param + '-000', 2);
+                        frameAnimation.run(function(){
+                            ep.removeFromParent();
+                        });
+                    }
+                });
                 break;
             case 1 : 
                 var label = new cc.Node();

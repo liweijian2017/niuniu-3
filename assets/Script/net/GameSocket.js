@@ -22,6 +22,8 @@ var GameSocket = cc.Class({
 			[P.BROADCAST_DIAMOND_CHANGE_RET]: this.BROADCAST_DIAMOND_CHANGE_RET,
 			[P.BROADCAST_MONEY_CHANGE_RET]: this.BROADCAST_MONEY_CHANGE_RET,
 		 	[P.BROADCAST_ALL_MESSAGE_RET] : this.BROADCAST_ALL_MESSAGE_RET, //喇叭
+		 	[P.SVR_JOIN_FAIL]: this.SVR_JOIN_FAIL,
+		 	[P.SVR_CMD_USER_CRASH] : this.SVR_CMD_USER_CRASH, //破产消息
 		};
 	},
 
@@ -201,6 +203,16 @@ var GameSocket = cc.Class({
 		cc.director.loadScene('TableScene');
 	},
 
+	SVR_JOIN_FAIL: function(pack){
+		this.resume();
+		var canvas = cc.director.getScene().getChildByName('Canvas');
+		canvas.getComponent('PopUp').removeLoadding();
+		var msg = "服务器繁忙，请稍后再试！";
+		if(pack.errorCode == 2)
+			msg = "服务器正在升级，请稍后再试！";
+		canvas.getComponent('PopUp').showDlg(msg);
+	},
+
 	BROADCAST_DIAMOND_CHANGE_RET: function(pack){
 		Http.userData.score = pack.diamond;
 	},
@@ -212,6 +224,28 @@ var GameSocket = cc.Class({
 	//接受到喇叭消息
     BROADCAST_ALL_MESSAGE_RET:function(pack){
         BroadcastReceiver.addMessageToList(pack);
+    },
+
+    //破产处理
+    SVR_CMD_USER_CRASH:function(pack){
+        var canvas = cc.director.getScene().getChildByName('Canvas');
+        //1.确认用户破产补助次数
+        Http.getBankruptInfo(function(data){ //data = {bankruptCount: 2,  reward: {chips: 2000}}
+            canvas.getComponent('PopUp').showBankruptWin(data.reward.chips , data.bankruptCount+1, function(){
+                Http.getBankruptReward(function(data){
+                    canvas.getComponent('PopUp').closeBankruptWin();
+                    canvas.getComponent('PopUp').playMoneyPar();
+                }, function(err){
+                	canvas.getComponent('PopUp').showDlg("领取破产补助失败,请重试", null,null);
+                });
+            });
+        }, function(err){
+            console.log(err);
+            canvas.getComponent('PopUp').showDlg("已经没有破产补助了,请充值~", function(){
+                if(window.gotoPay)
+                    window.gotoPay();
+            },null);
+        });
     },
 });
 

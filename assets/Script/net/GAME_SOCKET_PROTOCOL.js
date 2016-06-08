@@ -361,8 +361,8 @@ P.SVR_CMD_USER_CRASH            = 0x4213    //SVR返回破产包
 CONFIG[P.SVR_CMD_USER_CRASH] = {
     ver : 1,
     fmt : [
-        {name:"times", type:T.BYTE},        //破产次数
-        {name:"subsidizeChips", type:T.LONG},//破产之后额外加的钱数
+        {name:"times", type:T.BYTE},        
+        {name:"remark", type:T.LONG},//破产原因
     ],
 }
 

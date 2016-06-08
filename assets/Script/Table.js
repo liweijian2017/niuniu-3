@@ -36,11 +36,6 @@ cc.Class({
             default:null,
             type:cc.Node
         },
-        IsSit:false, //用户自己是否已经坐下
-        gameStatus:0, //房间状态
-        finalPokerType:0, //最终牌型
-        minBuyIn:0, //入场筹码需求数量
-        blind:0, //盲注
         roomName:{
             default:null,
             type:cc.Label
@@ -57,6 +52,11 @@ cc.Class({
             default:null,
             type:cc.Node
         },
+        IsSit:false, //用户自己是否已经坐下
+        gameStatus:0, //房间状态
+        finalPokerType:0, //最终牌型
+        minBuyIn:0, //入场筹码需求数量
+        blind:0, //盲注
     },
 
     onLoad: function () {
@@ -64,6 +64,7 @@ cc.Class({
         GameData.IN_GAME = 1;
         this.initSeats();
         this.playerList = null;
+        this.selectedSeat = null; //被选择中的座位(打牌的时候隐藏,玩家离开座位显示)
         this.oldHint = null; //存储当前的提示,下一个提示出现时候方便移除该提示
         this.bankerSeat = null; //当前局庄家是谁
         this.mapFun = {  //函数地图
@@ -118,7 +119,8 @@ cc.Class({
             if(this.IsSit)return;
             var index = event.getUserData().msg;
             Game.socket.sendSitDown(parseInt(index));
-            this.moveAllPosId(index); //先旋转位置
+            var canvas = cc.director.getScene().getChildByName('Canvas');
+            canvas.getComponent('PopUp').showLoadding("正在坐下");
         }, this);
     },
 
@@ -172,7 +174,7 @@ cc.Class({
 
     //回到首页
     leaveRoom:function () {
-        console.log("目前自己的座位状态:" + this.selfSeat.getComponent('SelfSeat').state);
+        // console.log("目前自己的座位状态:" + this.selfSeat.getComponent('SelfSeat').state);
         if(this.selfSeat.getComponent('SelfSeat').state == 0 || this.selfSeat.getComponent('SelfSeat').state == -1){
             this.isSelfLeave = true;  //主动离开
             this.doLeaveRoom();
@@ -218,7 +220,12 @@ cc.Class({
         this.selfSeat.getComponent("SelfSeat").closePlayerMultiple();
         this.selfSeat.getComponent("SelfSeat").state = state||0; //默认为0   
     },
-
+    //关闭面板
+    clearSelfSeat:function(){
+        this.IsSit = false;
+        this.selfSeat.getComponent("SelfSeat").clearUserData();
+        this.selfSeat.active = false;
+    },
     //加载用户数据到座位上面
     seatImportData:function (playerList) {
         for(var j=0; j<this.seats.length; j++){ //遍历座位
@@ -255,13 +262,9 @@ cc.Class({
             }
         });
         if(this.selfSeat.getComponent('SelfSeat').state > 0){
-            console.log("座位状态,游戏进入到下一轮了....");
+            // console.log("座位状态,游戏进入到下一轮了....");
             this.selfSeat.getComponent('SelfSeat').state = (this.selfSeat.getComponent('SelfSeat').state + 1) % 5;
         }
-    },
-    setSelfState:function(state){ //游戏未开始,但是已经坐下
-        if(this.IsSit&&this.selfSeat.getComponent('SelfSeat').state <= 0)
-            this.selfSeat.getComponent('SelfSeat').state = state;
     },
     //移动座位位置id, 用户座位为4; index:用户选择的位置id
     moveAllPosId:function (index) {
@@ -270,7 +273,6 @@ cc.Class({
         for(var k=0; k<this.seats.length; k++){
             //设置位置
             var i = (k + offX + 5) % 5;
-            console.log( k + ' -> ' + i + " - " + offX);
             var pos = this.posList[i].getPosition();
             if(i==0||i==1||i==4){ //左边座位
                 this.seats[k].getComponent('Seat').posType = 0;
@@ -333,7 +335,6 @@ cc.Class({
                     }
                 }
                 if(seat.id == change.seatId){
-                    //积分显示修改
                     seat.countScore(change.seatChips);
                     seat.updateSeat();
                 }
@@ -347,9 +348,9 @@ cc.Class({
         for(var k=0; k<loser.length; k++) { //动画
             if(loser[k].getPos){
                 self.getComponent('Animation_0').runAni(loser[k].getPos(), endPos, function () {
-                        if(winer.length == 0 && cb){ //没有出金币的动画
-                            cb();
-                        }
+                    if(winer.length == 0 && cb){ //没有出金币的动画
+                        cb();
+                    }
                 });
             }
         };
@@ -417,6 +418,35 @@ cc.Class({
             }
         });
     },
+    //自动坐下
+    autoSitDown:function(){
+        if(!this.IsSit) {
+            var self = this;
+            this.handleOtherSeat(function(seat){//找到没有人的座位坐下
+                if(!seat.hold){
+                    var canvas = cc.director.getScene().getChildByName('Canvas');
+                    canvas.getComponent('PopUp').showLoadding("正在坐下");
+                    Game.socket.sendSitDown(parseInt(seat.id));
+                    return true;
+                }
+            });
+        }
+    },
+    //玩家站起动作
+    standUp:function(id){
+        this.clearSelfSeat();
+        this.selectedSeat.node.active = true;
+        this.selectedSeat.id = id;
+        this.selectedSeat = null;
+    },
+
+    logAllSeat:function(){
+        for(var i=0; i<this.seats.length; i++){
+            var seat = this.seats[i].getComponent('Seat');
+            console.log('座位ID: ' + seat.id + "; 状态:" + seat.state);
+        }
+    },
+
     //成功加入房间
     SVR_JOIN_SUCCESS:function (pack) {
         var self = this;
@@ -449,10 +479,11 @@ cc.Class({
                         this.selfSeat.getComponent('SelfSeat').getFourPoker(pack.handCards);
                     }
                 };
-                this.handleOtherSeat(function (seat) { //更新座位容器
+                this.handleOtherSeat(function (seat) { //自己坐下
                     if(seat.id == selfPlayer.seatId){
-                        seat.removeFromParent();
-                        self.seats.splice(seat.id, 1);
+                        self.selectedSeat = seat;
+                        seat.clearUserData(); 
+                        seat.node.active = false;
                     }
                 });
                 switch(selfPlayer.state){ //自己的状态
@@ -528,16 +559,7 @@ cc.Class({
                 });
             }
         }
-        //自动坐下
-        if(!this.IsSit) {
-            this.handleOtherSeat(function(seat){//找到没有人的座位坐下
-                if(!seat.hold){
-                    self.moveAllPosId(parseInt(seat.id)); //先旋转位置
-                    Game.socket.sendSitDown(parseInt(seat.id));
-                    return true;
-                }
-            });
-        }
+        this.autoSitDown();
     },
     //游戏状态切换时
     SVR_TURN_TO:function (pack) {
@@ -556,13 +578,13 @@ cc.Class({
                                 seat.setMultiple(seat.multiple);
                             }
                         }else {
-                            console.log("玩家倍数:" + seat.multiple);
+                            // console.log("玩家倍数:" + seat.multiple);
                             seat.setMultiple(-1); //隐藏庄家按钮
                         }
                     });
                 }
                 this.stateToNext(); // 2
-                console.log("闲家选择倍数,座位状态: " + this.selfSeat.getComponent('SelfSeat').state);
+                // console.log("闲家选择倍数,座位状态: " + this.selfSeat.getComponent('SelfSeat').state);
                 //闲家选择倍数
                 if(this.IsSit && this.selfSeat.getComponent('SelfSeat').state > 0){ //定时(一定时间后,自己选择)
                     //判断自己是否是庄家
@@ -636,7 +658,7 @@ cc.Class({
                     //真正的发牌结束
                     self.selfSeat.getComponent('SelfSeat').showHandPoker();
                     //如果玩家做下 提供玩家叫庄
-                    if(self.IsSit){
+                    if(self.IsSit && self.selfSeat.getComponent('SelfSeat').state > 0){
                         self.selfSeat.getComponent('SelfSeat').showMultipleWin(self.minBuyIn);
                         cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3')); 
                         self.popupToast(null, pack.timeout, '请抢庄:');
@@ -680,11 +702,9 @@ cc.Class({
     },
     //下发第五张牌
     SVR_DEAL_ONE_CARD:function (pack) {
-
         // this.handleAllSeats(function(seat){
         //     console.log('目前游戏状态:' + pack.gameStatus + "; 座位ID:" + seat.id + "; 座位状态: " + seat.state);
         // });
-
         var self = this;
         cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_deal_card.mp3'));
         this.finalPokerType = pack.cardType;
@@ -785,15 +805,22 @@ cc.Class({
             if(seat.id == pack.seatId){ //找到玩家选择的位置
                 seat.setUserData(data); //设置数据
                 seat.state = 0; //刚刚坐下状态为0
+                if(pack.uid == Http.userData.uid){
+                    var canvas = cc.director.getScene().getChildByName('Canvas');
+                    canvas.getComponent('PopUp').removeLoadding();
+                    console.log('自己进入房间');
+                    self.IsSit = true;
+                    self.setSelfSeatData(seat.id, 0, pack.seatChips);
+                    //用面板代替原来的座位
+                    self.selectedSeat = seat;
+                    seat.clearUserData();
+                    seat.node.active = false;
+                    self.moveAllPosId(seat.posId);
+                }
             }
-            //玩家坐下了
-            if(seat.id == pack.seatId && pack.uid == Http.userData.uid){
-                self.IsSit = true;
-                self.setSelfSeatData(seat.id, 0, pack.seatChips);
-                //用面板代替原来的座位
-                seat.removeFromParent();
-                self.seats.splice(seat.id, 1);
-            }
+            // if(seat.id == pack.seatId && pack.uid == Http.userData.uid){
+                
+            // }
         });
     },
     //某玩家站起
@@ -808,42 +835,37 @@ cc.Class({
             if(this.isSelfLeave)
                 return;
             var msg = "长时间未操作被踢起！";
-            var isNoMoney = false;
-            if(pack.seatChips < 1500)
-            {
-                msg = "游戏币不足！";
-                isNoMoney = true;
-            }
-            var self = this;
-            var canvas = cc.director.getScene().getChildByName('Canvas');
-            canvas.getComponent('PopUp').showDlg(msg, function(){                
-                if(isNoMoney)
-                {
-                    if(window.gotoPay){
-                        window.gotoPay();
-                    }
-                } 
-                else
-                {
+            if(pack.seatChips < 1500){ 
+                this.standUp(pack.seatId);
+            }else {
+                var self = this;
+                var canvas = cc.director.getScene().getChildByName('Canvas');
+                canvas.getComponent('PopUp').showDlg(msg, function(){                
                     self.doLeaveRoom();
-                }
-            });            
+                });
+            }          
         }
     },
     //坐下失败
     SVR_SIT_DOWN_FAIL:function (pack) {
         var canvas = cc.director.getScene().getChildByName('Canvas');
-        canvas.getComponent('PopUp').showDlg('坐下失败,请重试', function(){
-        }); 
+        canvas.getComponent('PopUp').removeLoadding();
+        if(Http.userData.point < this.minBuyIn)
+        {
+            canvas.getComponent('PopUp').showDlg('您的游戏币不足' + Util.bigNumToStr2(this.minBuyIn) + ',请去充值' , function(){
+                if(window.gotoPay)
+                      window.gotoPay();
+            }, function(){});
+        }
+        else
+        {
+            canvas.getComponent('PopUp').showDlg('坐下失败,请重试', function(){});
+        }
     },
     //登出成功
     SVR_LEAVE_SUCCESS:function (pack) {
     },
-    //进入房间失败
-    SVR_JOIN_FAIL:function (pack) {
-        alert('进入房间失败, 请刷新重试');
-    },
-    //接受到后台发来的广播
+    //接受到后台发来的聊天广播
     SVR_SEND_ROOM_BROADCAST:function(pack){
         this.handleAllSeats(function(seat){
             seat.parseChatPack(pack); //把聊天包交给座位对象处理

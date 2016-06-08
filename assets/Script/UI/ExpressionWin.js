@@ -27,7 +27,6 @@ cc.Class({
                 this.layout.node.addChild(expression);
             }
         }, 0);
-        
     },
 
     start:function(){

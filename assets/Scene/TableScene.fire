@@ -17716,11 +17716,6 @@
     "endPanel": {
       "__id__": 471
     },
-    "IsSit": false,
-    "gameStatus": 0,
-    "finalPokerType": 0,
-    "minBuyIn": 0,
-    "blind": 0,
     "roomName": {
       "__id__": 24
     },
@@ -17732,7 +17727,12 @@
     },
     "chatWin": {
       "__id__": 553
-    }
+    },
+    "IsSit": false,
+    "gameStatus": 0,
+    "finalPokerType": 0,
+    "minBuyIn": 0,
+    "blind": 0
   },
   {
     "__type__": "cc.Node",
@@ -22548,6 +22548,12 @@
     },
     "promptBoxPrefab": {
       "__uuid__": "1f501c13-53e3-4ffb-89f7-5ef2aeac3a10"
+    },
+    "bankruptWinPrefab": {
+      "__uuid__": "effab463-caab-48f1-9d99-ca7d7b72f2b2"
+    },
+    "moneyParPrefab": {
+      "__uuid__": "025b538f-09ba-410d-b5a4-28d16e9053eb"
     }
   },
   {

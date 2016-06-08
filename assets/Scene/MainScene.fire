@@ -7819,6 +7819,12 @@
     },
     "promptBoxPrefab": {
       "__uuid__": "1f501c13-53e3-4ffb-89f7-5ef2aeac3a10"
+    },
+    "bankruptWinPrefab": {
+      "__uuid__": "effab463-caab-48f1-9d99-ca7d7b72f2b2"
+    },
+    "moneyParPrefab": {
+      "__uuid__": "025b538f-09ba-410d-b5a4-28d16e9053eb"
     }
   },
   {
