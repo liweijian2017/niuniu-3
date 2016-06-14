@@ -1,24 +1,27 @@
 var ImageLoader = require('ImageLoader');
 var Util = require('Util');
 var Router = require('Router');
+var SeatData = require('SeatData');
 /**
  * 基本座位类
  */
 cc.Class({
     extends: cc.Component,
     properties: {
+        _isChange:false,
         posType:1,//0:左边座位; 1:右边座位
         id:-1, //座位id
         posId:0, //本地显示位置id
         hold:false,//false:空位; true:有人
         state:-1, //座位状态: -1:没人; 0:等待游戏开始 1:开始叫庄 2;如果是闲家(叫倍); 3:拿到最后一张牌(看牛); 4:看牛结束,飞金币
         multiple:-1,//-1:还没有开始抢;0:不抢; 0-4代表倍数,表示抢庄
-        nameStr:'',
-        score:0,
-        point:0,
-        playerMultiple:0,
+        nameStr:'', //玩家名称
+        score:0, //积分
+        point:0, //筹码
+        playerMultiple:0, //闲家选择的倍数
         isBanker:false,//false:非庄;true:庄家
         userData:null, //坐在座位上的用户数据
+        data:null,
         spriteAtlas:{
             default:null,
             type:cc.SpriteAtlas  
@@ -82,10 +85,32 @@ cc.Class({
     },
     //初始化
     onLoad: function () {
+        // var data = {
+        //     id:-1, //座位id
+        //     posType:0,//0:左边座位; 1:右边座位
+        //     posId:0, //本地显示位置id
+        //     hold:false,//false:空位; true:有人
+        //     state:-1, //座位状态: -1:没人; 0:等待游戏开始 1:开始叫庄 2;如果是闲家(叫倍); 3:拿到最后一张牌(看牛); 4:看牛结束,飞金币
+        //     multiple:-1,//-1:还没有开始抢;0:不抢; 0-4代表倍数,表示抢庄
+        //     nameStr:'', //玩家名称
+        //     score:0, //积分
+        //     point:0, //筹码
+        //     playerMultiple:0, //闲家选择的倍数
+        //     isBanker:false, //false:非庄;true:庄家
+        // };
+        // this.data = SeatData(data, this._offChangeValue.bind(this));
     },
     start:function(){
-        //渲染空位,设置空位数值
+        this._isChange = true;
+    },
+    update:function(){
+        if(!this._isChange) return;
         this.updateSeat();
+        console.log('属性改变, 更新座位显示');
+        this._isChange = false;
+    },
+    _offChangeValue:function(){
+        this._isChange = true;
     },
     //更新座位显示
     updateSeat:function(){
@@ -99,7 +124,6 @@ cc.Class({
             this.nameLabel.string = Util.formatName(this.nameStr, 6);
             this.scoreLabel.string = Util.bigNumToStr(this.score);
             this.pointLabel.string = Util.bigNumToStr(this.point);
-
             //叫庄更新
             if(this.multiple >= 0){
                 this.sameBg.node.active = true;
@@ -149,7 +173,6 @@ cc.Class({
             this.stateLabel.setPosition(cc.p(-85,27));
         }
     },
-    
     //更新头像
     updataHeadImg:function (url) {
         //头像更新

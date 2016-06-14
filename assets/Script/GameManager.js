@@ -1,25 +1,40 @@
+var Http = require('Http');
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //    default: null,
-        //    url: cc.Texture2D,  // optional, default is typeof default
-        //    serializable: true, // optional, default is true
-        //    visible: true,      // optional, default is true
-        //    displayName: 'Foo', // optional
-        //    readonly: false,    // optional, default is false
-        // },
-        // ...
+        mainPage:{
+            default:null,
+            type:cc.Node
+        },
+        coursePage:{
+            default:null,
+            type:cc.Node
+        },
     },
 
-    // use this for initialization
     onLoad: function () {
-
+        this.handleCourse();
     },
-
-    // called every frame, uncomment this function to activate update callback
-    // update: function (dt) {
-
-    // },
+    //处理新手教程
+    handleCourse:function(){
+        // if(Http.userData.isNew == 0){
+        //     this.coursePage.active = false;
+        //     return;
+        // }
+        // this.mainPage.active = false;
+        this.startCourse();
+    },
+    //开始游戏
+    startGame:function(){
+        this.mainPage.active = true;
+        this.coursePage.active = false;
+    },
+    startCourse:function(){
+        this.mainPage.active = false;
+        this.coursePage.active = true;
+    },
+    showMainPage:function(){
+        this.mainPage.active = true;
+    },
 });
