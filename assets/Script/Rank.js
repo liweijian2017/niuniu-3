@@ -35,23 +35,23 @@ cc.Class({
     },
     //加载财富榜
     initRichList:function(){
-        this.richBtn.getComponent(cc.Button).interactable = false;
         var listView = this.getComponent('ListView');
         Http.getTop(function(data){
             listView.initializeForData(data.list);
         }, function(err){
             // console.err(err);
         });
+        this.richBtn.getComponent(cc.Button).interactable = false;
     },
     //加载积分榜
     initScoreList:function(){
-        this.scoreBtn.getComponent(cc.Button).interactable = false;
         var listView = this.getComponent('ListView');
         Http.getScoreTop(function(data){
             listView.initializeForData(data.list);
         }, function(err){
             // console.err(err);
         });
+        this.scoreBtn.getComponent(cc.Button).interactable = false;
     },
     changeToRich:function(){
         if(this.fsm.can('openRich'))

@@ -1,7 +1,6 @@
 var Game = require('Game');
 var GameData = require('GameData');
 var Http = require('Http');
-var GameSocket = require('GameSocket');
 var P = require('GAME_SOCKET_PROTOCOL');
 var SchedulerPool = require('SchedulerPool');
 var sp = new SchedulerPool();
@@ -58,6 +57,7 @@ cc.Class({
         finalPokerType:0, //最终牌型
         minBuyIn:0, //入场筹码需求数量
         blind:0, //盲注
+        xs:3,
     },
 
     onLoad: function () {
@@ -116,10 +116,10 @@ cc.Class({
     },
 
     init:function(pack){
-        cc.log('进入房间,初始化');
         this.roomName.string = pack.roomName + " 底分:" + Util.bigNumToStr2(pack.blind); //底分提示
         this.minBuyIn = pack.minBuyIn; //最小携带
         this.blind = pack.blind; //盲注
+        this.xs = pack.xs;
         this.gameStatus = pack.gameStatus;
         this.playerList = pack.playerList;
         this.makeBanker(pack.dealerSeatId);
@@ -405,11 +405,10 @@ cc.Class({
         this.chatWin.active = false;
     },
     //提示台费和积分规则
-    showTabelInfo:function(venue, blind){
+    showTabelInfo:function(venue, blind, roomScore){
         var size = cc.director.getWinSizeInPixels();
         var taifei = Math.floor((venue / 100) * blind);
-        var sendScore = Math.floor(taifei*0.85);
-        var hintStr = '每局扣'+ Util.bigNumToStr2(taifei) +'台费，获得'+ Util.bigNumToStr2(sendScore)+'积分';
+        var hintStr = '每局扣'+ Util.bigNumToStr2(taifei) +'台费，获得'+ Util.bigNumToStr2(roomScore)+'积分';
         this.popupToast(cc.p(0, size.height/2-60), 5, hintStr, true);
     },
     //自动坐下
@@ -508,7 +507,7 @@ cc.Class({
                             this.popupToast(null, 5, '等待玩家选择倍数:');
                             this.selfSeat.setMultiple(selfPlayer.betX);
                         }else{
-                            this.selfSeat.showPalyerMultipleWin(this.bankerSeat.point ,this.blind);
+                            this.selfSeat.showPalyerMultipleWin(this.bankerSeat.point ,this.blind, this.xs);
                             cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3'));
                             this.popupToast(null, 5, '请选择倍数:');
                         }
@@ -595,7 +594,7 @@ cc.Class({
         if(this.isSit && this.selfSeat.state > 0){
             //判断自己是否是庄家
             if(this.selfSeat.id != this.bankerSeat.id){ 
-                this.selfSeat.showPalyerMultipleWin(this.bankerSeat.point ,this.blind);
+                this.selfSeat.showPalyerMultipleWin(this.bankerSeat.point ,this.blind, this.xs);
                 this.popupToast(null, timeout, '请选择倍数:');
                 cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_notice.mp3'));
             }else { //是庄家

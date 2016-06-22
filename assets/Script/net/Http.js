@@ -21,14 +21,14 @@ var DataProxy = require('DataProxy');
 if(!window.USERDATA){
 	window.USERDATA = {
 		point: 1500,
-		score: 125768,
-		uid:   27,  //544, 4087, 4203, 7490
+		score: 0,
+		uid:   1466389038,  //544, 4087, 4203, 7490
 		sk:    'abc58ipalmplay85abc',
-		name:  '莫莫',
+		name:  '测试号哈',
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
-		xmlevel: 1, 
+		xmlevel: 1,
 		token: '',
-		isNew: 0	};
+		isNew: 0	}; //1:新用户 0:老用户
 }
 
 if(!window.CONFIGDATA){
@@ -154,6 +154,13 @@ var http = {
     */
     getBankruptReward:function(resultCallback, errorCallback){
       return HttpService.request("bankrupt.getReward", {}, resultCallback, errorCallback);
+    },
+
+    /*
+      更新新用户状态，新手引导走完后调用
+    */
+    updateNewUser: function(resultCallback, errorCallback){
+      return HttpService.request("user.isNewer", {}, resultCallback, errorCallback);
     }
 };
 

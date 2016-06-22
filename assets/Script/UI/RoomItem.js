@@ -73,10 +73,10 @@ cc.Class({
         var accessed = this.isRoomAccessed();
         var canvas = cc.director.getScene().getChildByName('Canvas');
         //if(accessed){
-            cc.info("enter room ");          
-            canvas.getComponent('PopUp').showLoadding();
-            Game.socket.sendJoinRoom(parseInt(this.roomId.string));
-            Game.socket.pause();            
+        cc.info("enter room ");          
+        canvas.getComponent('PopUp').showLoadding();
+        Game.socket.sendJoinRoom(parseInt(this.roomId.string));
+        Game.socket.pause();            
         /*}else{
             cc.info('item pressed');
             canvas.getComponent('PopUp').showDlg('您的游戏币不足，不能进入该房间。去充值吗？', function(){

@@ -1,5 +1,6 @@
+var BaseComponent = require('BaseComponent');
 cc.Class({
-    extends: cc.Component,
+    extends: BaseComponent,
 
     properties: {
         cardUint:0x010A,
@@ -131,5 +132,9 @@ cc.Class({
         if(this.touchEvent&&!this.isSelect){
             this.node.off(cc.Node.EventType.TOUCH_END, this.touchEvent, this);
         }
-    }
+    },
+    //属性变动监听
+    _updateNode:function(){
+        this.updateSprites();
+    },
 });

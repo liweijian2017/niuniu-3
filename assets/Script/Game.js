@@ -13,7 +13,7 @@ var Game = cc.Class({
             default:null,
             type:cc.Prefab
         },
-    },   
+    },
     onLoad: function () {      
         if(!Game.socket) {
             var list = Http.getConfigData().serverList[0];

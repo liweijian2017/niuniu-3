@@ -4,7 +4,7 @@ cc.Class({
     properties: {
         itemTemplate: { // 拿到Item的模板
             default: null,
-            type: cc.Node
+            type: cc.Prefab
         },
         scrollView: { //拿到布局
         	default: null,
@@ -26,7 +26,7 @@ cc.Class({
     },
 
     initialize: function () {
-        this.content.height = this.totalCount * (this.itemTemplate.height + this.spacing) + this.spacing; // get total content height
+        this.content.height = this.totalCount * (this.itemTemplate.data.height + this.spacing) + this.spacing; // get total content height
     	for (let i = 0; i < this.spawnCount; ++i) { // spawn items, we only need to do this once
     		let item = cc.instantiate(this.itemTemplate);
     		this.content.addChild(item);
@@ -40,11 +40,10 @@ cc.Class({
         this.items = [];
         this.content.height = 0;
         this.content.removeAllChildren();
-
-        this.content.height = list.length * (this.itemTemplate.height + this.spacing) + this.spacing; // get total content height
-        for (let i = 0; i < this.spawnCount; ++i) { // spawn items, we only need to do this once
+        this.content.height = list.length * (this.itemTemplate.data.height + this.spacing) + this.spacing; // get total content height
+        for (var i = 0; i < this.spawnCount; ++i) { // spawn items, we only need to do this once
             if(i >= list.length)return;
-            let item = cc.instantiate(this.itemTemplate);
+            var item = cc.instantiate(this.itemTemplate);
             item.getComponent('ListView_Item').setDataSource(list); //设置数据源
             this.content.addChild(item);
             item.setPosition(0, -item.height * (0.5 + i) - this.spacing * (i + 1));
@@ -68,7 +67,7 @@ cc.Class({
         let items = this.items;
         let buffer = this.bufferZone;
         let isDown = this.scrollView.content.y < this.lastContentPosY; // scrolling direction 是否到底
-        let offset = (this.itemTemplate.height + this.spacing) * items.length; //偏移量
+        let offset = (this.itemTemplate.data.height + this.spacing) * items.length; //偏移量
         for (let i = 0; i < items.length; ++i) {
             let viewPos = this.getPositionInView(items[i]);
             if (isDown) {

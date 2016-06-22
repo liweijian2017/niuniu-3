@@ -3,22 +3,18 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        inType:-1, //默认没有动画
-        outType:-1,
+        inType:-1, //进入动画
+        outType:-1, //移除动画
     },
 
-    // use this for initialization
     onLoad: function () {
     },
-    show:function(type){
-        if(type) this.inType = type;
-        this.showNode();
+
+    onDestroy:function(){
+        this.unscheduleAllCallbacks();
     },
-    hide:function(type){
-        if(type) this.outType = type;
-        this.hideNode();
-    },
-    getInAction:function(){
+    
+    _getInAction:function(){
         var action = null;
         switch(this.inType){
             case -1:
@@ -28,7 +24,6 @@ cc.Class({
                 action = cc.moveTo(0.5, cc.p(0,0)).easing(cc.easeBackOut());
                 break;
             case 1: //弹出
-                this.node.setPosition(0,0);
                 this.node.setScale(0.2);
                 action = cc.scaleTo(0.5, 1).easing(cc.easeBackOut());
                 break;
@@ -38,7 +33,7 @@ cc.Class({
         return action;
     },
 
-    getOutAction:function(){
+    _getOutAction:function(){
         var action = null;
         switch(this.outType){
             case -1:
@@ -46,22 +41,25 @@ cc.Class({
             case 0: //左侧滑出
                 action = cc.moveTo(0.5, cc.p(-500,0)).easing(cc.easeBackOut());
                 break;
+            case 1: //缩小
+                action = cc.scaleTo(0.5, 0).easing(cc.easeElasticIn(8.0));
+                break;
             default:
                 break;
         }
         return action;
     },
 
-    showNode:function(){
-        var action = this.getInAction();
+    _showNode:function(){
+        var action = this._getInAction();
         if(action){
             this.node.runAction(action);
             return;
         }
     },
 
-    hideNode:function(){
-        var action = this.getOutAction();
+    _hideNode:function(){
+        var action = this._getOutAction();
         if(action){ //如果预设了动画
             var fun = function(node){
                 node.active = false;
@@ -70,6 +68,24 @@ cc.Class({
             return;
         }
         this.node.active = false;
+    },
+
+    //显示节点以对应的动画方式
+    show:function(type){
+        if(type) this.inType = type;
+        this._showNode();
+    },
+    //隐藏节点以对应的动画方式
+    hide:function(type){
+        if(type) this.outType = type;
+        this._hideNode();
+    },
+    //定时的隐藏节点
+    timingHide:function(type, time){ //TODO 定时器处理
+        if(type) this.outType = type;
+        return this.scheduleOnce(function() {
+            this._hideNode();
+        }, time);
     },
 
 });

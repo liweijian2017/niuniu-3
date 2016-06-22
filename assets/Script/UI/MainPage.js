@@ -50,11 +50,13 @@ cc.Class({
         var ImageLoader = require('ImageLoader');
         var userData = Http.userData;
         this.scoreHandler_ = userData.addDataObserver('score', function(){
-            me.score.string = Util.bigNumToStr(this.score);
+            if(me.score)
+                me.score.string = Util.bigNumToStr(this.score);
         });
 
         this.pointHandler_ = userData.addDataObserver('point', function(){
-            me.point.string = Util.bigNumToStr(this.point);
+            if(me.point)
+                me.point.string = Util.bigNumToStr(this.point);
         });
 
         this.getOnlineReq_ = Http.getOnlineAll(function(data){            

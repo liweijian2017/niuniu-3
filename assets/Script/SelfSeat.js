@@ -89,9 +89,9 @@ cc.Class({
         }, this);
     },
       
-    showPalyerMultipleWin:function (bankerPoint, blind) {
-        var max = Math.floor(Math.min(bankerPoint, this.point) / blind / 3);
-        console.log("玩家叫倍限制: " + Util.bigNumToStr(bankerPoint) + ' / ' + Util.bigNumToStr(blind) + ' /3 = ' + max);
+    showPalyerMultipleWin:function (bankerPoint, blind, xs) {
+        var max = Math.floor(Math.min(bankerPoint, this.point) / blind / xs);
+        console.log("玩家叫倍限制: " + Util.bigNumToStr(bankerPoint) + ' / ' + Util.bigNumToStr(blind) + ' / ' + xs +' = ' + max);
         this.palyerMultipleWin.active = true;
         this.palyerMultipleWin.getComponent('BtnsControl').show(max);
         this.node.on('PLAYER_SELECT_MULTIPLE', function(event){

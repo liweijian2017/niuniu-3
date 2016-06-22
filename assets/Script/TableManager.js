@@ -6,13 +6,19 @@ var GameSocket = require('GameSocket');
 var P = require('GAME_SOCKET_PROTOCOL');
 var SchedulerPool = require('SchedulerPool');
 var sp = new SchedulerPool();
+var Router = require('Router');
 
 cc.Class({
     extends: cc.Component,
     properties: {
+        tableNode:{
+            default:null,
+            type:cc.Node
+        }
     },
     onLoad: function () {
-    	this.table = this.getComponent('Table');
+        Router.tableManager = this;
+    	this.table = this.tableNode.getComponent('Table');
         this.mapFun = {  //函数地图
             [P.SVR_JOIN_SUCCESS] : this.SVR_JOIN_SUCCESS, //加入房间
             [P.SVR_TURN_TO] : this.SVR_TURN_TO,
@@ -30,26 +36,41 @@ cc.Class({
     },
     //游戏开始入口
     start:function () {
+        // if(!Game.socket){//模拟登录快速开始过程
+        //     GameData.IN_GAME = 0;
+        //     var list = Http.getConfigData().serverList[0];
+        //     Game.socket = new GameSocket();
+        //     Game.socket.connect(list[0], list[1]);
+        //     this.scheduleOnce(function(){
+        //         Game.socket.sendQuickStart(); //快速开始
+        //     }, 1);
+        // }
+        if(!Game.socket)return;
         Game.socket.addEventListener(GameSocket.EVT_PACKET_RECEIVED, this._onProcessPacket, this);//接受服务器包
         Game.socket.resume();//加入房间
     },
     //离开桌面,移除监听
     onDestroy:function () {
+        if(!Game.socket)return;
         Game.socket.removeEventListener(GameSocket.EVT_PACKET_RECEIVED, this._onProcessPacket, this);
         sp.clearAll();
     },
-
+    //处理服务器包
     _onProcessPacket: function(event){
         var pack = event.data;
 		if(typeof(this.mapFun[pack.cmd]) == 'function')
 			this.mapFun[pack.cmd].call(this, pack);
 	},
+    //处理本地包
+    handleLocalPacket: function(pack){
+        if(typeof(this.mapFun[pack.cmd]) == 'function')
+            this.mapFun[pack.cmd].call(this, pack);
+    },
 
     //成功加入房间
     SVR_JOIN_SUCCESS:function (pack) {
-        console.log('成功加入房间!!!');
         this.table.init(pack); //初始化桌子
-        this.table.showTabelInfo(pack.venue, pack.blind); //台费提示
+        this.table.showTabelInfo(pack.venue, pack.blind, pack.score); //台费提示
         this.table.seatImportData(pack.playerList); //设置所有座位数据
         this.table.parseJoinPack(pack);//解析房间包内容
         this.table.autoSitDown();

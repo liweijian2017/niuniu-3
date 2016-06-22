@@ -43,6 +43,5 @@ cc.Class({
     moreAndMore:function(){
         
     }
-    
-    
+
 });

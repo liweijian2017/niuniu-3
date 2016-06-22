@@ -1,7 +1,6 @@
 var ImageLoader = require('ImageLoader');
 var Util = require('Util');
 var Router = require('Router');
-var SeatData = require('SeatData');
 /**
  * 基本座位类
  */
@@ -106,7 +105,6 @@ cc.Class({
     update:function(){
         if(!this._isChange) return;
         this.updateSeat();
-        console.log('属性改变, 更新座位显示');
         this._isChange = false;
     },
     _offChangeValue:function(){
@@ -204,7 +202,6 @@ cc.Class({
             this.nameStr = userData.name;
             this.score = userData.score;
             this.point = userData.point;
-            //TODO 更新头像
             if(userData.imgUrl){
                 this.updataHeadImg(userData.imgUrl);
             }

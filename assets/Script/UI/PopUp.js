@@ -41,7 +41,8 @@ cc.Class({
     },
     removeLoadding: function(){
         var canvas = cc.director.getScene().getChildByName('Canvas');
-        canvas.getChildByName('loading').removeFromParent();
+        var loadingNode = canvas.getChildByName('loading')
+        if(loadingNode)loadingNode.removeFromParent();
     },
     //破产
     showBankruptWin:function(point, num, cb){

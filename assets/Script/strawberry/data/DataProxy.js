@@ -51,6 +51,7 @@ DataProxy.extend = function(data){
 	};
 
 	data.removeDataObserver = function(key, handleToRemove){
+		if(!handleToRemove)return;
 		return DataProxy.removeDataObserver(data, key, handleToRemove);
 	};
 

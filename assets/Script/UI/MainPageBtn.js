@@ -72,29 +72,29 @@ cc.Class({
             });
 
         }else if(this.menuState == 2){
-            //todo
         }
     },
 
-    //快速开始   
+    //快速开始
     startPressed: function () {
         GameData.IN_HALL = 0;
-       var canvas = cc.director.getScene().getChildByName('Canvas');
-       if(Http.userData.point < 1500)
-       {
-          canvas.getComponent('PopUp').showDlg('您的游戏币不足, 去充值吗？', function(){
-                if(window.gotoPay)
-                    window.gotoPay();
-          }, function(){});
-       }
-       else
-       {
-           //Http.quickGame(function(data){
-           Game.socket.pause();
-           var canvas = cc.director.getScene().getChildByName('Canvas');
-           canvas.getComponent('PopUp').showLoadding();
-           Game.socket.sendQuickStart();
-           //});
+        var coursePage = cc.director.getScene().getChildByName('CoursePage');
+        if(Http.userData.isNew == 1 && coursePage){
+            coursePage.getComponent('CoursePage').startCourseTable();//新手用户教程场
+            return;
+        }else {
+            var canvas = cc.director.getScene().getChildByName('Canvas');
+            if(Http.userData.point < 1500) {
+                canvas.getComponent('PopUp').showDlg('您的游戏币不足, 去充值吗？', function(){
+                    if(window.gotoPay)
+                        window.gotoPay();
+                }, function(){});
+            } else {
+               Game.socket.pause();
+               var canvas = cc.director.getScene().getChildByName('Canvas');
+               canvas.getComponent('PopUp').showLoadding();
+               Game.socket.sendQuickStart();
+            }
         }
     },
     
