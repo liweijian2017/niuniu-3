@@ -3,6 +3,7 @@ cc.Class({
     extends: BaseComponent,
 
     properties: {
+        id:-1, //区域ID
         _point:0, //下注区筹码数
         _isActive:false, //下注区是否打激活中
         _isWin:false, //是否胜利
@@ -15,11 +16,13 @@ cc.Class({
 
     onLoad: function () {
     	this._isChange = true; //按照默认值更新一次
+        console.log('百人场-初始化下注区:' + this.id);
+        if(!this.betPanel)return;
     	this._resultLabel = this.node.getChildByName('ResultLabel');
-    	if(!this.betPanel)return;
 		this._iconWin = this.betPanel.getChildByName('IconWin');
 		this._iconOpen = this.betPanel.getChildByName('IconOpen');
 		this._iconClose = this.betPanel.getChildByName('IconClose');
+        this.betPanel.on(cc.Node.EventType.TOUCH_END, this._handleClick.bind(this), this);
     },
 
     start:function(){
@@ -40,5 +43,12 @@ cc.Class({
     		this._iconClose.active = false;
     	}
     },
-
+    //下注动作
+    _handleClick:function(event){
+        // 发送下注请求 TODO
+        if(!this._isActive)return;
+        var event =  new cc.Event.EventCustom('SELECT_BET', true);
+        event.setUserData({msg:this.id});
+        this.node.dispatchEvent(event);
+    },
 });

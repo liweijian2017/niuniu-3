@@ -4,23 +4,10 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>bairen_di.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{345,250},{157,102}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{157,102}}</string>
-                <key>sourceSize</key>
-                <string>{157,102}</string>
-            </dict>
             <key>bairen_di2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{98,646},{91,71}}</string>
+                <string>{{338,530},{91,71}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,7 +20,7 @@
             <key>bairen_fangjian_di.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{345,354},{157,55}}</string>
+                <string>{{345,250},{157,55}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,7 +46,7 @@
             <key>bairen_xiazhudi1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{229,677},{30,30}}</string>
+                <string>{{176,589},{30,30}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -72,7 +59,7 @@
             <key>bairen_xiazhudi2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{303,650},{30,30}}</string>
+                <string>{{208,560},{30,30}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -85,7 +72,7 @@
             <key>bairen_xiazhudi3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{453,574},{32,28}}</string>
+                <string>{{441,412},{32,28}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,7 +85,7 @@
             <key>bairen_xiazhudi4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{271,650},{30,30}}</string>
+                <string>{{472,608},{30,30}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -111,7 +98,7 @@
             <key>bairen_xiazhudi5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{33,647},{29,29}}</string>
+                <string>{{394,603},{29,29}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -124,7 +111,7 @@
             <key>bairen_xiazhudi6.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,647},{29,29}}</string>
+                <string>{{303,615},{29,29}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -137,7 +124,7 @@
             <key>bairen_xiazhudi7.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{453,543},{32,29}}</string>
+                <string>{{208,529},{32,29}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -150,7 +137,7 @@
             <key>bairen_xiazhudi8.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{191,693},{29,29}}</string>
+                <string>{{303,584},{29,29}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -163,7 +150,7 @@
             <key>bairen_zhuangshi.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{242,383},{19,19}}</string>
+                <string>{{491,332},{19,19}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -189,7 +176,7 @@
             <key>btn_bairen1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{292,452},{48,50}}</string>
+                <string>{{293,381},{48,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -202,11 +189,11 @@
             <key>btn_bairen2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{242,442},{48,50}}</string>
+                <string>{{293,331},{48,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{1,0},{48,50}}</string>
                 <key>sourceSize</key>
@@ -215,7 +202,7 @@
             <key>btn_bairen3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,402},{48,50}}</string>
+                <string>{{293,281},{48,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -228,7 +215,7 @@
             <key>btn_bairen4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,352},{48,50}}</string>
+                <string>{{293,231},{48,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -241,7 +228,7 @@
             <key>btn_bairen5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,302},{48,50}}</string>
+                <string>{{293,181},{48,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -254,7 +241,7 @@
             <key>btn_bairen6.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,252},{48,50}}</string>
+                <string>{{293,131},{48,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -267,11 +254,11 @@
             <key>btn_jiangchi.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{485,677},{24,25}}</string>
+                <string>{{208,592},{24,25}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{24,25}}</string>
                 <key>sourceSize</key>
@@ -280,7 +267,7 @@
             <key>fnt_bairen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{453,604},{103,30}}</string>
+                <string>{{313,26},{103,30}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -293,7 +280,7 @@
             <key>fnt_fuhao.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{278,628},{58,20}}</string>
+                <string>{{334,603},{58,20}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -306,7 +293,7 @@
             <key>fnt_kaijiang.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,617},{94,28}}</string>
+                <string>{{112,559},{94,28}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -319,7 +306,7 @@
             <key>fnt_liebiao.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{338,636},{94,28}}</string>
+                <string>{{112,529},{94,28}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -332,11 +319,11 @@
             <key>fnt_paixing.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{487,561},{75,23}}</string>
+                <string>{{242,559},{75,23}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{75,23}}</string>
                 <key>sourceSize</key>
@@ -345,7 +332,7 @@
             <key>fnt_putong.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{489,476},{59,20}}</string>
+                <string>{{490,388},{59,20}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -358,7 +345,7 @@
             <key>fnt_shangzhuang.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,144},{33,18}}</string>
+                <string>{{242,358},{33,18}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -371,7 +358,7 @@
             <key>fnt_shangzhuang2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{98,617},{94,27}}</string>
+                <string>{{242,530},{94,27}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -384,7 +371,7 @@
             <key>fnt_shangzhuang3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,179},{32,17}}</string>
+                <string>{{242,393},{32,17}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -397,7 +384,7 @@
             <key>fnt_xiazhu.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{344,476},{143,38}}</string>
+                <string>{{345,372},{143,38}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -410,7 +397,7 @@
             <key>fnt_xiazhuang.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,109},{33,18}}</string>
+                <string>{{491,353},{33,18}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -423,7 +410,7 @@
             <key>fnt_xinxi.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{341,606},{94,28}}</string>
+                <string>{{345,412},{94,28}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -449,11 +436,11 @@
             <key>icon_bairen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{286,502},{61,55}}</string>
+                <string>{{176,621},{61,55}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{61,55}}</string>
                 <key>sourceSize</key>
@@ -462,7 +449,7 @@
             <key>icon_cha.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{485,703},{22,22}}</string>
+                <string>{{334,625},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -475,7 +462,7 @@
             <key>icon_gou.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{488,537},{22,22}}</string>
+                <string>{{469,640},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -488,7 +475,7 @@
             <key>icon_jingshi.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{293,213},{15,15}}</string>
+                <string>{{293,109},{15,15}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -501,7 +488,7 @@
             <key>icon_lingxing.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{191,655},{36,36}}</string>
+                <string>{{474,570},{36,36}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -514,11 +501,11 @@
             <key>icon_new.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{234,558},{41,42}}</string>
+                <string>{{431,530},{41,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{41,42}}</string>
                 <key>sourceSize</key>
@@ -527,20 +514,20 @@
             <key>icon_qushi.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{453,516},{33,25}}</string>
+                <string>{{425,618},{39,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{33,25}}</string>
+                <string>{{0,0},{39,42}}</string>
                 <key>sourceSize</key>
-                <string>{33,25}</string>
+                <string>{39,42}</string>
             </dict>
             <key>icon_sanye.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{233,639},{36,36}}</string>
+                <string>{{474,532},{36,36}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -553,11 +540,11 @@
             <key>icon_taoxin.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{194,617},{37,36}}</string>
+                <string>{{474,493},{37,36}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{37,36}}</string>
                 <key>sourceSize</key>
@@ -566,24 +553,24 @@
             <key>icon_wanjia.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{485,638},{37,25}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <true/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{37,25}}</string>
-                <key>sourceSize</key>
-                <string>{37,25}</string>
-            </dict>
-            <key>icon_xinxing.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{234,601},{42,36}}</string>
+                <string>{{431,574},{39,42}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{39,42}}</string>
+                <key>sourceSize</key>
+                <string>{39,42}</string>
+            </dict>
+            <key>icon_xinxing.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{474,449},{42,36}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{42,36}}</string>
                 <key>sourceSize</key>
@@ -592,7 +579,7 @@
             <key>icon_zhanqi.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{242,358},{23,19}}</string>
+                <string>{{491,307},{23,19}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -683,7 +670,7 @@
             <key>light1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{278,565},{61,61}}</string>
+                <string>{{240,584},{61,61}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -696,7 +683,7 @@
             <key>light2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{343,516},{108,88}}</string>
+                <string>{{2,529},{108,88}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -709,33 +696,20 @@
             <key>shangzhuang_di.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{242,494},{42,62}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{42,62}}</string>
-                <key>sourceSize</key>
-                <string>{42,62}</string>
-            </dict>
-            <key>shangzhuang_di2.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{313,26},{224,30}}</string>
+                <string>{{112,589},{42,62}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{224,30}}</string>
+                <string>{{0,0},{42,62}}</string>
                 <key>sourceSize</key>
-                <string>{224,30}</string>
+                <string>{42,62}</string>
             </dict>
             <key>xuanzhong.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{345,411},{144,63}}</string>
+                <string>{{345,307},{144,63}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -748,7 +722,7 @@
             <key>zhuangjia_di.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,529},{230,86}}</string>
+                <string>{{242,442},{230,86}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -768,7 +742,7 @@
             <key>size</key>
             <string>{512,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:8c9424075f48c9aafcbbbba2f3db42c2$</string>
+            <string>$TexturePacker:SmartUpdate:6e6e1ed1fbf969c34064b89b1f869d85$</string>
             <key>textureFileName</key>
             <string>hundred.png</string>
         </dict>

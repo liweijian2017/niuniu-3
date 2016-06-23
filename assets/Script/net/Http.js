@@ -28,7 +28,7 @@ if(!window.USERDATA){
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
 		xmlevel: 1,
 		token: '',
-		isNew: 0	}; //1:新用户 0:老用户
+		isNew: 0 }; //1:新用户 0:老用户
 }
 
 if(!window.CONFIGDATA){

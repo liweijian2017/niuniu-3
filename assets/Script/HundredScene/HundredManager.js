@@ -57,8 +57,7 @@ cc.Class({
     _openBet:function(){
         console.log('打开下注区');
         this.popLayer.showToast('开始下注');
-        this.ittLayer.openHandlePanel();
-        this.scheduleOnce(this.fsm.closeBet.bind(this.fsm), 5); //开始下注
+        this.ittLayer.openHandlePanel(); //打开操作面板权限
     },
     //关闭下注区
     _closeBet:function(){
@@ -88,12 +87,15 @@ cc.Class({
         console.log('结算结果,收金币动画');
         this.popLayer.showToast('等待游戏开始');
         console.log('等待游戏开始');
+        this.betLayer.removePokers(); //清牌
         this.scheduleOnce(this.fsm.openBet.bind(this.fsm), 3);
     },
     //打开下注区之后
     _onbeforeWaitingBet:function(){
-        this.popLayer.showStartHint(); //提示
-        this.betLayer.removePokers(); //清牌
-        this.betLayer.openBetAreas();
-    },
+        this.popLayer.showStartHint(function(){
+            console.log('提示结束');
+            this.betLayer.openBetAreas();
+            this.scheduleOnce(this.fsm.closeBet.bind(this.fsm), 5); //关闭下注
+        }.bind(this)); //提示
+    }
 });

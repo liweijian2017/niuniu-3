@@ -76,6 +76,15 @@ var Util = {
     }
     return newStr;
   },
+  //指定区域获得随机点
+  randomPos:function(width, height){
+      var pos = {x:0, y:0};
+      var puls = Math.random() > 0.5 ? 1 : -1;
+      var puls2 = Math.random() > 0.5 ? 1 : -1;
+      pos.x = Math.random()*width/2 * puls;
+      pos.y = Math.random()*height/2 * puls2;
+      return pos;
+  },
 
   base64_decode: function(encodedData) {
     var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='

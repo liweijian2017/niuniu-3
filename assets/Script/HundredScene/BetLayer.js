@@ -1,12 +1,20 @@
 //下注层,手牌层
+var Util = require('Util');
 var BetArea = require('BetArea');
+var BaseComponent = require('BaseComponent');
 
 cc.Class({
-    extends: cc.Component,
+    extends: BaseComponent,
 
     properties: {
-        handlePokers:[cc.Node],
-        betAreas:[BetArea],
+        _poundPoint:0,
+        betAreas:[BetArea], //下注区对象
+        handlePokers:[cc.Node],//所有手牌
+        seats:[cc.Node], //座位集合
+        poundLabel:{ //奖池数值
+            default:null,
+            type:cc.Label
+        },
         sendPokersPosition:{ //发牌的起始点
             default:null,
             type:cc.Node
@@ -15,14 +23,29 @@ cc.Class({
             default:null,
             type:cc.Prefab
         },
+        chumaPrefab:{ //单张牌模具
+            default:null,
+            type:cc.Prefab
+        },
     },
 
     onLoad: function () {
+        this._poundPoint = 110111111;
+        this._isChange = true;
+        //TODO 模式接受服务器消息
+        this.node.on('SELECT_BET', function (event) {
+            var betId = event.getUserData().msg;
+            this.sendPoint(1, betId, 10);
+        }.bind(this));
     },
 
     onDestroy:function(){
         //移除所有该节点上面的定时器
         this.unscheduleAllForTarget(this);
+    },
+
+    _updateNode:function(){
+        this.poundLabel.string = Util.bigNumToStr(this._poundPoint);
     },
     //执行发牌动画,且发牌
     sendPokers:function(callBack){
@@ -51,7 +74,7 @@ cc.Class({
                     var sendEnded = function(){
                         if(count == this.handlePokers.length*5)callBack();
                     };
-                    var ani = cc.spawn(cc.moveTo(0.5, cc.p(15*index-15,0)), cc.scaleTo(0.5, 1)).easing(cc.easeOut(3.0));;
+                    var ani = cc.spawn(cc.moveTo(0.5, cc.p(15*index-15,0)), cc.scaleTo(0.5, 1)).easing(cc.easeOut(3.0));
                     poker.runAction(cc.sequence(ani, cc.callFunc(sendEnded, this)));
                 }.bind(this, childs[x], count, x),0.1*count);
             }
@@ -76,19 +99,35 @@ cc.Class({
             this.handlePokers[k].removeAllChildren();
         }
     },
-    //执行筹码动画,更新对应下注区
-    sendPoint:function(seatId, betId){ //座位id,下注区id
-        
-    },
     //打开下注区
     openBetAreas:function(){
         for(var k in this.betAreas){
             this.betAreas[k].setAttr('_isActive', true);
         }
     },
+    //关闭下注区
     closeBetAreas:function(){
         for(var k in this.betAreas){
             this.betAreas[k].setAttr('_isActive', false);
         }
+    },
+    //执行筹码动画,更新对应下注区, 筹码数
+    sendPoint:function(seatId, betId, num){ //座位id,下注区id
+        for(var i=0; i<num; i++){
+            var chuma = cc.instantiate(this.chumaPrefab);
+            var panel = this.betAreas[betId].node.getChildByName('ChipArea');
+            chuma.parent = panel;
+            var endPos = Util.randomPos(panel.width-chuma.width, panel.height-chuma.height);
+            //执行动画
+            var worldPos = this.seats[seatId].convertToWorldSpaceAR(cc.p(0,0));
+            var startPos = panel.convertToNodeSpaceAR(worldPos);
+            chuma.setPosition(startPos);
+            var ani = cc.spawn(cc.moveTo(1, endPos), cc.scaleTo(0.5, 1)).easing(cc.easeOut(3.0));
+            chuma.runAction(ani);
+        }
+    },
+    //筹码
+    putPoint:function(betId, seatId, num){
+
     },
 });

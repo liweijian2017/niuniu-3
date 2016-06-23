@@ -17,7 +17,7 @@ cc.Class({
 
     start:function(){
     	var data = {
-        	name:'系统庄家',
+        	name:'系统',
         	img:'',
         	point:'1000000000'
         }

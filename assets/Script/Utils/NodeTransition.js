@@ -4,6 +4,8 @@ cc.Class({
 
     properties: {
         inType:-1, //进入动画
+        inTime:0.5,
+        outTime:0.5,
         outType:-1, //移除动画
     },
 
@@ -21,11 +23,19 @@ cc.Class({
                 break;
             case 0: //右侧进入
                 this.node.x = 500;
-                action = cc.moveTo(0.5, cc.p(0,0)).easing(cc.easeBackOut());
+                action = cc.moveTo(this.inTime, cc.p(0,0)).easing(cc.easeBackOut());
                 break;
-            case 1: //弹出
+            case 1: //中心弹出
                 this.node.setScale(0.2);
-                action = cc.scaleTo(0.5, 1).easing(cc.easeBackOut());
+                action = cc.scaleTo(this.inTime, 1).easing(cc.easeBackOut());
+                break;
+            case 2: //节点顶部扩张开
+                this.node.anchorY = 1;
+                this.node.setScale(1, 0);
+                var scaleTo = cc.scaleTo(this.inTime, 1, 1).easing(cc.easeBackOut());
+                action = cc.sequence(scaleTo, cc.callFunc(function(){
+                    this.node.anchorY = 0.5;
+                }, this));
                 break;
             default:
                 break;
@@ -39,10 +49,15 @@ cc.Class({
             case -1:
                 break;
             case 0: //左侧滑出
-                action = cc.moveTo(0.5, cc.p(-500,0)).easing(cc.easeBackOut());
+                action = cc.moveTo(this.outTime, cc.p(-500,0)).easing(cc.easeBackOut());
                 break;
-            case 1: //缩小
-                action = cc.scaleTo(0.5, 0).easing(cc.easeElasticIn(8.0));
+            case 1: //中心缩小
+                action = cc.scaleTo(this.outTime, 0).easing(cc.easeElasticIn(8.0));
+                break;
+            case 2: //
+                console.log('收起菜单');
+                this.node.anchorY = 1;
+                action = cc.scaleTo(this.outTime, 1, 0);
                 break;
             default:
                 break;
@@ -58,10 +73,11 @@ cc.Class({
         }
     },
 
-    _hideNode:function(){
+    _hideNode:function(cb){
         var action = this._getOutAction();
         if(action){ //如果预设了动画
             var fun = function(node){
+                if(cb)cb();
                 node.active = false;
             }.bind(this, this.node);
             this.node.runAction(cc.sequence(action, cc.callFunc(fun, this)));
@@ -81,10 +97,10 @@ cc.Class({
         this._hideNode();
     },
     //定时的隐藏节点
-    timingHide:function(type, time){ //TODO 定时器处理
+    timingHide:function(type, time, cb){ //定时器处理
         if(type) this.outType = type;
         return this.scheduleOnce(function() {
-            this._hideNode();
+            this._hideNode(cb);
         }, time);
     },
 

@@ -35,7 +35,7 @@ cc.Class({
             this.imgSprite.active = true;
         }
         if(this._nameStr)
-            this.nameLabel.getComponent(cc.Label).string = Util.formatName(this._nameStr);
+            this.nameLabel.getComponent(cc.Label).string = Util.formatName(this._nameStr, 6);
         if(this._point != this._oldPoint){
             this.pointLabel.getComponent(cc.Label).string = Util.bigNumToStr(this._point);
             //TODO 数值浮动
