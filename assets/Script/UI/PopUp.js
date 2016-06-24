@@ -58,7 +58,7 @@ cc.Class({
         var canvas = cc.director.getScene().getChildByName('Canvas');
         canvas.getChildByName('bankrupt').removeFromParent();
     },
-    playMoneyPar:function(){
+    playMoneyPar:function(){ //加入粒子效果
         var canvas = cc.director.getScene().getChildByName('Canvas');
         this.node.addChild(cc.instantiate(this.moneyParPrefab));
     },

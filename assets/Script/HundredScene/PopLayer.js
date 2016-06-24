@@ -36,10 +36,18 @@ cc.Class({
     //打开玩家列表
     openPlayerListWin:function(){
         this._playerListWin.active = true;
+        //TODO 请求无座玩家列表
+        var data = [];
+        for(var i=0; i<11; i++){
+            var user = { uid:999,nick:'Dall',img:'',buyinChips:10000};
+            data.push(user);
+        }
+        this._playerListWin.getComponent('PlayerListWin').init(data); //加载请求数据
         this._playerListWin.getComponent('NodeTransition').show();
     },
     //关闭玩家列表
     closePlayerListWin:function(){
+        this._playerListWin.getComponent('PlayerListWin').clearChildren();
         this._playerListWin.getComponent('NodeTransition').hide();
     },
     //打开菜单
@@ -80,10 +88,17 @@ cc.Class({
     //打开上庄列表
     openBeBankerWin:function(){
         this._beBankerWin.active = true;
+        var data = [];
+        for(var i=0; i<11; i++){
+            var user = { uid:999,nick:'Dall',img:'',buyinChips:10000, readyBuyin:9999};
+            data.push(user);
+        }
+        this._beBankerWin.getComponent('BeBankerWin').init(data); //加载请求数据
         this._beBankerWin.getComponent('NodeTransition').show();
     },
     //关闭上庄列表
     closeBeBankerWin:function(){
+        this._beBankerWin.getComponent('BeBankerWin').clearChildren();
         this._beBankerWin.getComponent('NodeTransition').hide();
     },
 

@@ -49,7 +49,7 @@ cc.Class({
             this.node.getComponent('CoursePack').init();//开启发包机
         }.bind(this));//进入房间
     },
-    //结束教学场
+    //结束教学场,回到主界面,继续引导
     endCourseTable:function(){
         cc.director.loadScene('MainScene', function(){
             var page = this.updatePage(10);

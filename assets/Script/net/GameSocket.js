@@ -218,6 +218,7 @@ var GameSocket = cc.Class({
 	},
 
 	BROADCAST_MONEY_CHANGE_RET: function(pack){
+		if(pack.remark == 11005)return;
 		Http.userData.point = pack.money;
 	},
 

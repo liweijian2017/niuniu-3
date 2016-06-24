@@ -22,19 +22,21 @@ if(!window.USERDATA){
 	window.USERDATA = {
 		point: 1500,
 		score: 0,
-		uid:   1466389038,  //544, 4087, 4203, 7490
+		uid:   33,  //544, 4087, 4203, 7490
 		sk:    'abc58ipalmplay85abc',
 		name:  '测试号哈',
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
 		xmlevel: 1,
 		token: '',
-		isNew: 0 }; //1:新用户 0:老用户
+		isNew: 0 ,
+    isFirstLogin: false}; //1:新用户 0:老用户
 }
 
 if(!window.CONFIGDATA){
   window.CONFIGDATA = {
     apiUrl: "http://game-dev.manyouwei.cn/dice/api.php",
     roomList: 'http://game.manyouwei.cn/assets/niuniu/roomlist/20160517192004.json',
+    actJson: 'http://game-dev.manyouwei.cn/assets/niuniu/act/201606242445.json',
     serverList: [['192.168.1.100', '9902'], ['192.168.1.100', '9902']]
   };
 }
@@ -84,6 +86,14 @@ var http = {
     */
     getRoomList:function(resultCallback){
       return HttpService.cacheFile(this.getConfigData().roomList, resultCallback);
+    },
+
+    /*
+      获取转盘配置
+      resultCallback(data)
+    */
+    getTurnplateData:function(resultCallback){
+      return HttpService.cacheFile(this.getConfigData().actJson, resultCallback);
     },
 
     /*
@@ -161,7 +171,16 @@ var http = {
     */
     updateNewUser: function(resultCallback, errorCallback){
       return HttpService.request("user.isNewer", {}, resultCallback, errorCallback);
-    }
+    },
+
+    /*
+       登录转盘
+       resultCallback(data)
+       data = {index:2, point:2000}
+    */
+    loginWheel: function(resultCallback, errorCallback){
+      return HttpService.request("act.loginWheel", {}, resultCallback, errorCallback);
+    },
 };
 
 var __define = function (o, p, g, s) { Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s }); };

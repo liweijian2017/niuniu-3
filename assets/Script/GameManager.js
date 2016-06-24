@@ -1,7 +1,6 @@
 var Http = require('Http');
 cc.Class({
     extends: cc.Component,
-
     properties: {
         mainPage: {
             default: null,
@@ -11,8 +10,11 @@ cc.Class({
             default: null,
             type: cc.Node
         },
+        turnplate: {
+            default: null,
+            type: cc.Node
+        },
     },
-
     onLoad: function() {
         if (Http.userData.isNew == 1) { //1是新手,给出教程提示
             this.startCourse();
@@ -23,6 +25,9 @@ cc.Class({
         } else { //老用户直接进入
             this.startGame();
         }
+    },
+    start:function(){
+        this._initTurnPlateData();
     },
     startCourse: function() { //开始教程
         this.mainPage.active = false;
@@ -48,7 +53,25 @@ cc.Class({
         this.mainPage.active = true;
         this.coursePage.active = false;
     },
-
-
+    _initTurnPlateData:function(){
+        var coursePage = cc.director.getScene().getChildByName('CoursePage');
+        if(!coursePage)return;
+        if(coursePage.activeInHierarchy)return;
+        if (Http.userData.isNew == 0 && Http.userData.isFirstLogin) { //是否是每日第一次登陆
+            Http.getTurnplateData(function(data){
+                this.openTurnPlateWin();
+                this.turnplate.getComponent('Turnplate').initConfig(data.loginWheel);
+            }.bind(this));
+        }
+    },
+    //打开转盘
+    openTurnPlateWin:function(){
+        this.turnplate.active = true;
+        this.turnplate.getComponent('NodeTransition').show();
+    },
+    //关闭转盘
+    closeTurnPlateWin:function(){
+        this.turnplate.getComponent('NodeTransition').hide();
+    },
 
 });

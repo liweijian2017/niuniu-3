@@ -1208,22 +1208,10 @@ CONFIG[P.HUNDRED_SRV_LIST_RECORD] = {
             name: "records",
             type: T.ARRAY,
             fmt:[
-                {
-                    name: 1,
-                    type: T.BYTE
-                }, // 1:闲家胜 0:闲家输
-                {
-                    name: 2,
-                    type: T.BYTE
-                },
-                {
-                    name: 3,
-                    type: T.BYTE
-                },
-                {
-                    name: 4,
-                    type: T.BYTE
-                },
+                {name: 1,type: T.BYTE}, // 1:闲家胜 0:闲家输
+                {name: 2,type: T.BYTE},
+                {name: 3,type: T.BYTE},
+                {name: 4,type: T.BYTE},
             ]
         },
     ]
@@ -1447,7 +1435,7 @@ CONFIG[P.HUNDRED_SRV_LIST_LUCK_RECORD] = {
     ]
 }
 
-// 服务端返回上局幸运奖池记录
+// 服务端返回上局幸运奖池记录失败
 P.HUNDRED_SRV_LIST_LUCK_RECORD_FAIL = 0xa040
 CONFIG[P.HUNDRED_SRV_LIST_LUCK_RECORD_FAIL] = {
     ver: 1,
