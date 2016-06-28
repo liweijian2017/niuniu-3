@@ -18,15 +18,17 @@ closeRoom:关闭房间
 */
 
 var FSM = require('FSM'); //有限状态机
-cc.Class({
-    extends: cc.Component,
+
+var HundredStates = cc.Class({
     properties: {
-        _fsm:null,
+        _isBanker:false,//用户是否是庄家
+        _isSit:false, //用户是否坐下
+        _fsm:null, //牌桌状态机
     },
-    onLoad: function () {
+    ctor: function () {
+        cc.log("百人场-开启-状态管理器");    //实例化时，父构造函数会自动调用，
     },
-    getFsm:function(callbacks){
-        console.log('百人场-开启-状态管理器');
+    instance:function(callbacks){
         this._fsm = FSM.create({//创建状态机
             initial: 'NullState', 
             events: [
@@ -43,3 +45,5 @@ cc.Class({
         return this._fsm;
     },
 });
+
+module.exports = new HundredStates();

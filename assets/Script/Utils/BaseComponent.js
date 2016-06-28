@@ -11,6 +11,7 @@ cc.Class({
     },
 
     update:function(){
+        if(this._updateNormal)this._updateNormal();
         if(!this._isChange)return;
         this._updateNode();
         this._isChange = false;
@@ -25,5 +26,5 @@ cc.Class({
 
     _updateNode:function(){
     },
-
+    
 });

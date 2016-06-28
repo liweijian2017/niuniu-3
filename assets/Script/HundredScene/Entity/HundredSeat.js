@@ -6,9 +6,6 @@ cc.Class({
     properties: {
         id:-1, //座位id
         _isHold:false, //座位上是否有人
-        _nameStr:'', //座位上的人
-        _imgUrl:'',//头像地址
-        _point:0, //筹码数
         _oldPoint:0,
     },
 
@@ -35,22 +32,12 @@ cc.Class({
             this.imgSprite.active = true;
             this.nullSprite.active = false;
         }
-        if(this._nameStr)
-            this.nameLabel.getComponent(cc.Label).string = Util.formatName(this._nameStr, 6);
-        if(this._point != this._oldPoint){
-            this.pointLabel.getComponent(cc.Label).string = Util.bigNumToStr(this._point);
-            //TODO 数值浮动
-            this._oldPoint = this._point;
-        }
     },
     //坐下
     sitDown:function(data){
         this._isHold = true;
-        this._nameStr = data.name;
-        this._point = data.point;
-        this._imgUrl = data.img;
+        this.getComponent('UserComponent').setUserData(data.name, data.point, data.img);
         this._updateNode();
-        //加载头像 TODO 
         //执行动画
         this.nameLabel.y += 30;
         this.nameLabel.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
@@ -62,10 +49,7 @@ cc.Class({
     //站起
     standUp:function(){
         this._isHold = false;
-        this._nameStr = '';
-        this._point = 0;
-        this._imgUrl = '';
-        
+        this.getComponent('UserComponent').removeUserData();
         this.nameLabel.runAction(cc.moveBy(0.5, 0, 30).easing(cc.easeBackOut()));
         this.imgSprite.runAction(cc.moveBy(0.5, 0, 30).easing(cc.easeBackOut()));
         this.pointLabel.runAction(cc.moveBy(0.5, 0, 30).easing(cc.easeBackOut()));
@@ -76,7 +60,6 @@ cc.Class({
             this.imgSprite.y -= 30;
             this.pointLabel.y -= 30;
         } ,0.2);
-
     },
     //申请坐下
     _handleClick:function(event){

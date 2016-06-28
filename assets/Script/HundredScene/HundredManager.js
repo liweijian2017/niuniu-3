@@ -2,6 +2,8 @@ var BetLayer = require('BetLayer');
 var PopLayer = require('PopLayer');
 var IttLayer = require('IttLayer');
 var TableLayer = require('TableLayer');
+var HundredStates = require('HundredStates');
+
 cc.Class({
     extends: cc.Component,
 
@@ -19,15 +21,14 @@ cc.Class({
             default:null,
             type:PopLayer
         },
-        ittLayer:{
+        ittLayer:{ //交互层
             default:null,
             type:IttLayer
         }
     },
 
     onLoad: function () {
-        console.log('百人场-启动-游戏管理');
-        this.fsm = this.getComponent('HundredStates').getFsm({
+        this.fsm = HundredStates.instance({
             onopenRoom:this._openRoom.bind(this), //加载房间
             onopenBet:this._openBet.bind(this), //打开下注区
             oncloseBet:this._closeBet.bind(this), //关闭下注区
@@ -88,6 +89,7 @@ cc.Class({
         this.popLayer.showToast('等待游戏开始');
         console.log('等待游戏开始');
         this.betLayer.removePokers(); //清牌
+        this.betLayer.removeAllBets(); //移除筹码
         this.scheduleOnce(this.fsm.openBet.bind(this.fsm), 3);
     },
     //打开下注区之后

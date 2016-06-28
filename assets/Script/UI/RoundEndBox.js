@@ -1,10 +1,7 @@
 var Util = require('Util');
 cc.Class({
     extends: cc.Component,
-
     properties: {
-
-        //store title: WinTitle,LoseTitle,DrawTitle
         titles: {
             default: [],
             type: cc.Node
@@ -25,10 +22,7 @@ cc.Class({
             default: null,
             type: cc.Prefab
         }
-        
     },
-
-    // use this for initialization
     onLoad: function () {
         this.disabledUnderTouch();
     },
@@ -55,7 +49,6 @@ cc.Class({
             this.titles[2].active = true; //DrawTitle
         }
     },
-    //
     setProperty: function (propertyLabel, property) {
         if(property > 0){
             propertyLabel.node.color = new cc.Color(255, 255, 0);
@@ -97,7 +90,6 @@ cc.Class({
                 this.meProperty.string = selfChange >= 0 ? ('+'+Util.bigNumToStr2(selfChange)) : Util.bigNumToStr2(selfChange);
             }
         }        
-        
     },
     //该Box出现时，阻止其之外的所有组件接收点击事件
     disabledUnderTouch: function () {
@@ -116,7 +108,6 @@ cc.Class({
         if(this.playerLayout){
             this.playerLayout.removeAllChildren(); 
         }
-
     },
     //显示
     show:function (time, cb) {
