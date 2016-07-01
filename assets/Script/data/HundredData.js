@@ -1,4 +1,7 @@
 //百人场数据
+var DataHandle = function(){
+
+};
 var HundredData = { //百人场数据
     _handleList:[], 
     'banker':{ //庄家信息
@@ -8,28 +11,32 @@ var HundredData = { //百人场数据
     },
     'seats':{ //座位信息
         '1':{
-            name:'',
-            point:'',
+            isHold:false,
+            name:'1号朋友',
+            point:100,
             img:'',
-            uid:'',
+            uid:0,
         },
         '2':{
-            name:'',
-            point:'',
+            isHold:false,
+            name:'2号兄弟',
+            point:220,
             img:'',
-            uid:'',
+            uid:0,
         },
         '3':{
-            name:'',
-            point:'',
+            isHold:false,
+            name:'3号SB',
+            point:909910,
             img:'',
-            uid:'',
+            uid:0,
         },
         '4':{
-            name:'',
-            point:'',
+            isHold:false,
+            name:'4号大神',
+            point:128843,
             img:'',
-            uid:'',
+            uid:0,
         },
     },
     'handlePanel':{ //操控面板
@@ -48,20 +55,22 @@ var HundredData = { //百人场数据
         selectValue:100, //当前选择的按钮数值
     },
     //绑定数据句柄
-    bindCallF:function(name, handle){
-        if(!name)return null;
-        var data = HundredData[name];
-        handle(data); //初始化显示
-        Object.defineProperty(HundredData, name, {
+    bindCallF:function(path, handle){
+        if(!path)return null;
+        var name = HundredData._getDataName(path);
+        var pData = HundredData._findData(path);//上层数据
+        var data = pData[name];
+        handle(data);
+        Object.defineProperty(pData, name, {
             get: function(){
                 return data;
             },
-            set: function(data){
-                handle(data);
+            set: function(newData){
+                data = handle(newData);
             }
         });
         HundredData._handleList[name] = function(cb){
-            HundredData[name] = cb(data); //调用set方法
+            pData[name] = cb(data); //调用set方法
         };
         return HundredData._handleList[name];
     },
@@ -73,21 +82,20 @@ var HundredData = { //百人场数据
         }
         return HundredData._handleList[name];
     },
-
-    _findData:function(name){
-        var arr = name.split(':');
+    _findData:function(path){
+        var arr = path.split(':');
         var data = HundredData;
         if(arr.length == 1)return HundredData; //只有一层
         var count = 0;
-        while(count < arr.length){
-            data = HundredData[arr[count]];
+        while(count < arr.length-1){
+            data = data[arr[count]];
             count ++;
         }
         return data; //2层以上,返回目标上层数据
     },
-
+    _getDataName:function(path){
+        var arr = path.split(':');
+        return arr[arr.length-1];
+    },
 };
-
-// HundredData
-
 module.exports = HundredData;

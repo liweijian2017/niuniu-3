@@ -20,11 +20,16 @@ cc.Class({
         this.imgSprite = this.node.getChildByName('img');
         this.nullSprite = this.node.getChildByName('null');
         this.node.on(cc.Node.EventType.TOUCH_END, this._handleClick.bind(this), this);
-        // this.handle = HundredData.bindCallF('seats', this._updateView.bind(this));
+        this.handle = HundredData.bindCallF('seats:'+ this.id, this._updateView.bind(this));
+        HundredData.bindCallF('seats:'+ this.id + ':isHold', this._updateNode.bind(this));
     },
 
-    _updateNode:function(){
-        if(!this._isHold){
+    _updateView:function(data){
+        this.getComponent('UserComponent').setUserData(data.name, data.point, data.img);
+    },
+
+    _updateNode:function(data){
+        if(!data){
             this.nameLabel.active = false;
             this.pointLabel.active = false;
             this.imgSprite.active = false;
@@ -35,24 +40,17 @@ cc.Class({
             this.pointLabel.active = true;
             this.imgSprite.active = true;
             this.nullSprite.active = false;
+            this.nameLabel.y += 30;
+            this.nameLabel.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
+            this.imgSprite.y += 30;
+            this.imgSprite.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
+            this.pointLabel.y += 30;
+            this.pointLabel.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
         }
-    },
-    //坐下
-    sitDown:function(data){
-        this._isHold = true;
-        this.getComponent('UserComponent').setUserData(data.name, data.point, data.img);
-        this._updateNode();
-        //执行动画
-        this.nameLabel.y += 30;
-        this.nameLabel.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
-        this.imgSprite.y += 30;
-        this.imgSprite.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
-        this.pointLabel.y += 30;
-        this.pointLabel.runAction(cc.moveBy(0.5, 0, -30).easing(cc.easeBackOut()));
+        return data;
     },
     //站起
     standUp:function(){
-        this._isHold = false;
         this.getComponent('UserComponent').removeUserData();
         this.nameLabel.runAction(cc.moveBy(0.5, 0, 30).easing(cc.easeBackOut()));
         this.imgSprite.runAction(cc.moveBy(0.5, 0, 30).easing(cc.easeBackOut()));
@@ -67,12 +65,18 @@ cc.Class({
     },
     //申请坐下
     _handleClick:function(event){
-        if(!this._isHold){
-            console.log('百人场-申请坐下:' + this.id);
-            this.sitDown({name:'Dall', point:1000, img:''});
+        console.log(HundredData['seats'][this.id].isHold);
+        if(HundredData['seats'][this.id].isHold){
+            HundredData['seats'][this.id].isHold = false;
         }else {
-            this.standUp();
+            HundredData['seats'][this.id].isHold = true;
         }
+        // if(!this._isHold){
+        //     console.log('百人场-申请坐下:' + this.id);
+        //     this.sitDown({name:'Dall', point:1000, img:''});
+        // }else {
+        //     this.standUp();
+        // }
     },
 
     executingGoldAni:function(){
