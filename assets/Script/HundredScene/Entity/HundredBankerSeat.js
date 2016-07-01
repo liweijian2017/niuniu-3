@@ -1,8 +1,10 @@
 //庄家座位
-var BaseComponent = require('BaseComponent');
+// var BaseComponent = require('BaseComponent');
 var Util = require('Util');
+var HundredData = require('HundredData');
+
 cc.Class({
-    extends: BaseComponent,
+    extends: cc.Component,
 
     properties: {
         id:-1, //默认-1, 庄家座位id为0
@@ -15,26 +17,16 @@ cc.Class({
     },
 
     onLoad: function () {
-        this._isChange = true;
+        HundredData._findData('name');
+
         this.nameLabel = this.node.getChildByName('name');
         this.imgSprite = this.node.getChildByName('img');
+        this.handle = HundredData.bindCallF('banker', this._updateView.bind(this));
     },
-
-    _updateNode:function(){
-        if(!this._isHold){
-            this.nameLabel.active = false;
-            this.pointLabel.active = false;
-            this.imgSprite.active = false;
-            return;
-        }else{
-            this.nameLabel.active = true;
-            this.pointLabel.active = true;
-            this.imgSprite.active = true;
-        }
-    },
-
-    setData:function(data){
+    //更新显示
+    _updateView:function(data){
         this.getComponent('UserComponent').setUserData(data.name, data.point, data.img);
     },
+
 });
  

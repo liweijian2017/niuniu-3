@@ -24,7 +24,7 @@ cc.Class({
         this.numLabel.string = data.length + '人';
         for(var k in data){
             var noSeatItem = cc.instantiate(this.noSeatPrefab);
-            noSeatItem.getComponent('NoSeatItem').init(data[k]);
+            noSeatItem.getComponent('UserItem').init(data[k]);
             noSeatItem.parent = this.contentNode;  
         }
     },

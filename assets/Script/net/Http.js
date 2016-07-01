@@ -22,7 +22,7 @@ if(!window.USERDATA){
 	window.USERDATA = {
 		point: 1500,
 		score: 0,
-		uid:   33,  //544, 4087, 4203, 7490
+		uid:   5,  //544, 4087, 4203, 7490
 		sk:    'abc58ipalmplay85abc',
 		name:  '测试号哈',
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',

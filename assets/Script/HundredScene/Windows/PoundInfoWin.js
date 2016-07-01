@@ -59,8 +59,8 @@ cc.Class({
         for(var k in data){
             data[k].readyBuyin = data[k].winChips;
             var noSeatItem = cc.instantiate(this.noSeatPrefab);
-            noSeatItem.getComponent('NoSeatItem')._orderId = parseInt(k)+1;
-            noSeatItem.getComponent('NoSeatItem').init(data[k]);
+            noSeatItem.getComponent('UserItem')._orderId = parseInt(k)+1;
+            noSeatItem.getComponent('UserItem').init(data[k]);
             noSeatItem.parent = this.content;
         }
     },

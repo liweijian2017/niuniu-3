@@ -35,8 +35,8 @@ cc.Class({
     init:function(data){
         for(var k in data){
             var noSeatItem = cc.instantiate(this.noSeatPrefab);
-            noSeatItem.getComponent('NoSeatItem')._orderId = k;
-            noSeatItem.getComponent('NoSeatItem').init(data[k]);
+            noSeatItem.getComponent('UserItem')._orderId = k;
+            noSeatItem.getComponent('UserItem').init(data[k]);
             noSeatItem.parent = this.contentNode;
         }
     },

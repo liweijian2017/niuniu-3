@@ -1,5 +1,8 @@
+//百人场座位
 var BaseComponent = require('BaseComponent');
 var Util = require('Util');
+var HundredData = require('HundredData');
+
 cc.Class({
     extends: BaseComponent,
 
@@ -17,6 +20,7 @@ cc.Class({
         this.imgSprite = this.node.getChildByName('img');
         this.nullSprite = this.node.getChildByName('null');
         this.node.on(cc.Node.EventType.TOUCH_END, this._handleClick.bind(this), this);
+        // this.handle = HundredData.bindCallF('seats', this._updateView.bind(this));
     },
 
     _updateNode:function(){
@@ -69,5 +73,9 @@ cc.Class({
         }else {
             this.standUp();
         }
+    },
+
+    executingGoldAni:function(){
+        console.log('asdfasdfasfasdfasdf');
     },
 });

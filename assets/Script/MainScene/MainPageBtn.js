@@ -98,7 +98,7 @@ cc.Class({
         }
     },
     
-     //进入房间列表界面
+    //进入房间列表界面
     roomListPressed: function () {
         this.mainNode.active = false;
         this.roomListIn();
@@ -106,7 +106,6 @@ cc.Class({
         this.returnBtn.active = true;
         GameData.IN_HALL = 1;
     },
-    
     
     //返回主界面
     onReturnClick:function(){

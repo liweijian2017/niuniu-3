@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "NoSeatItem",
+    "_name": "UserItem",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -649,20 +649,9 @@
     },
     "_enabled": true,
     "_isChange": false,
+    "_data": null,
     "_orderId": -1,
     "_readyBuyin": 0,
-    "_nameStr": "",
-    "_point": 0,
-    "_imgUrl": "",
-    "imgSprite": {
-      "__id__": 6
-    },
-    "nameLabel": {
-      "__id__": 9
-    },
-    "pointLabel": {
-      "__id__": 18
-    },
     "orderLabel": {
       "__id__": 12
     },
@@ -679,6 +668,7 @@
     },
     "_enabled": true,
     "_isChange": false,
+    "pointType": 0,
     "_nick": "",
     "_point": 0,
     "_img": "",

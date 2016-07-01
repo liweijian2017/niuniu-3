@@ -1,3 +1,4 @@
+//listItem 列表item
 var BaseComponent = require('BaseComponent');
 var Util = require('Util');
 cc.Class({

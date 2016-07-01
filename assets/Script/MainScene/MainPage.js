@@ -39,9 +39,9 @@ cc.Class({
         var action  = cc.moveBy(0.8, 0, 10);
         action.easing(cc.easeElasticIn  (1));
         
-        var action2  = cc.moveBy(0.8, 0, -10);
-        action2.easing(cc.easeElasticOut  (1));
-        this.logo.runAction(cc.repeatForever(cc.sequence(action, action2)));
+    //     var action2  = cc.moveBy(0.8, 0, -10);
+    //     action2.easing(cc.easeElasticOut  (1));
+    //     this.logo.runAction(cc.repeatForever(cc.sequence(action, action2)));
     },
     
     //玩家进入游戏后设置玩家的头像、积分、筹码等

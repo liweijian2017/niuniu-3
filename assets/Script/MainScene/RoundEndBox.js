@@ -72,7 +72,8 @@ cc.Class({
                 change:overPlayers[i].change,
                 img:overPlayers[i].player.headImg.getComponent(cc.Sprite).spriteFrame,
             };
-            item.getComponent('Item').initData(data);
+            item.getComponent('UserComponent').pointType = 1;
+            item.getComponent('UserComponent').setUserData(data.name, data.change, data.img);
             this.addItem(item);
         };
         
@@ -83,13 +84,12 @@ cc.Class({
             this.setTitle(1);
             cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_lose.mp3')); 
         }
-        
         if(selfSeat){
             if(this.meIcon) {
                 this.meIcon.getComponent(cc.Sprite).spriteFrame = selfSeat.getComponent("SelfSeat").headImg.getComponent(cc.Sprite).spriteFrame;    
                 this.meProperty.string = selfChange >= 0 ? ('+'+Util.bigNumToStr2(selfChange)) : Util.bigNumToStr2(selfChange);
             }
-        }        
+        }
     },
     //该Box出现时，阻止其之外的所有组件接收点击事件
     disabledUnderTouch: function () {

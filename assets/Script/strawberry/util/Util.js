@@ -30,7 +30,7 @@ var Util = {
   },
 
   /*
-    12000 = 1.20 w 
+    12000 = 1.20 w 9,999
   */
   bigNumToStr: function(num) {
     var str = num;

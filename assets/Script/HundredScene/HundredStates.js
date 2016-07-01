@@ -16,20 +16,18 @@ OpenCards:开牌;
 dividePoint:结算
 closeRoom:关闭房间
 */
-
 var FSM = require('FSM'); //有限状态机
-
 var HundredStates = cc.Class({
     properties: {
-        _isBanker:false,//用户是否是庄家
-        _isSit:false, //用户是否坐下
-        _fsm:null, //牌桌状态机
+        isBanker:false,//用户是否是庄家
+        isSit:false, //用户是否坐下
+        fsm:null, //牌桌状态机
     },
     ctor: function () {
-        cc.log("百人场-开启-状态管理器");    //实例化时，父构造函数会自动调用，
+        cc.log("百人场-开启-状态管理器"); //实例化时，父构造函数会自动调用
     },
     instance:function(callbacks){
-        this._fsm = FSM.create({//创建状态机
+        this.fsm = FSM.create({//创建状态机
             initial: 'NullState', 
             events: [
                 { name: 'openRoom',  from: 'NullState',  to: 'WaitingStart' }, //开房间,等待开始
@@ -42,8 +40,7 @@ var HundredStates = cc.Class({
 　　　　　　],
             callbacks: callbacks
         });
-        return this._fsm;
+        return this.fsm;
     },
 });
-
 module.exports = new HundredStates();

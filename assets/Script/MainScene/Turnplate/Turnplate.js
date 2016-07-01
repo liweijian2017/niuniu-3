@@ -116,7 +116,7 @@ cc.Class({
     },
     //开始减速
     _onEnd:function(){
-        console.log('现实结束角度:' + this.target.rotation%360);
+        // console.log('现实结束角度:' + this.target.rotation%360);
         this.highLight.active = true;
         this.target.rotation = this._getRById();
         this._ar = 0;
@@ -127,6 +127,7 @@ cc.Class({
         this.hintPanel.getComponent('NodeTransition').timingHide(null, 2, function(){
             this.node.getComponent('NodeTransition').hide();
             Http.userData.point += this.endPoint;
+            Http.userData.isFirstLogin = false;
         }.bind(this));
 
     },
@@ -140,8 +141,6 @@ cc.Class({
         if(this._endId < 0)return 0;
         var endS = 360*this.endNum + this.offset; //减速的路程
         var v1 = this._vr; //每一帧的移动位置
-        // v²-v0²=2as
-        // console.log('理论结束角度: ' + (this.target.rotation + endS)%360);
         var a = -(v1*v1)/(2*endS);
         return a;
     },

@@ -3,12 +3,11 @@ var PopLayer = require('PopLayer');
 var IttLayer = require('IttLayer');
 var TableLayer = require('TableLayer');
 var HundredStates = require('HundredStates');
-
+var HundredData = require('HundredData');
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        betAreas:[cc.Node],
         tableLayer:{ //下注层
             default:null,
             type:TableLayer
@@ -41,6 +40,12 @@ cc.Class({
 
     start:function(){
         this.parseRoomPack(); //模拟游戏开始
+        this.scheduleOnce(function(){
+            HundredData.getDataHandle('handlePanel')(function(data){
+                data.type = 2;
+                return data;
+            });
+        }, 4);
     },
 
     //解析房间

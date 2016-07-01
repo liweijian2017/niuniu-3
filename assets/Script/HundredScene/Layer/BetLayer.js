@@ -40,7 +40,7 @@ cc.Class({
 
         //TODO 模式接受服务器消息
         this.schedule(function(){
-            if(!HundredStates._fsm.is('WaitingBet'))return;
+            if(!HundredStates.fsm.is('WaitingBet'))return;
             var length = parseInt(Math.random()*8);
             var bets = [];
             for(var i=0; i<length; i++){
@@ -76,24 +76,6 @@ cc.Class({
             }
             this._parseBetData(data);
         }, 2);
-
-        // this.schedule(function(){
-        //     // if(!HundredStates._fsm.is('WaitingBet'))return;
-        //     var length = parseInt(Math.random()*8);
-        //     var bets = [];
-        //     for(var i=0; i<length; i++){
-        //         bets.push({
-        //             potId:1,//0-3
-        //             seatId:parseInt(Math.random()*99) + 1,//1-99
-        //             betChips:parseInt(Math.random()*1000000),
-        //         });
-        //     }
-        //     var data = {
-        //         seatId:1, 
-        //         bets:bets
-        //     }
-        //     this._parseBetData(data);
-        // }, 2);
     },
 
     onDestroy:function(){
@@ -178,6 +160,7 @@ cc.Class({
                 this.betAreas[betId].addGold(chuma);
                 var endPos = Util.randomPos(panel.width-chuma.width, panel.height-chuma.height);
                 //执行动画
+                if(this.seats[seatId].getComponent('UpDownAni'))this.seats[seatId].getComponent('UpDownAni').play();
                 var worldPos = this.seats[seatId].convertToWorldSpaceAR(cc.p(0,0));
                 var startPos = panel.convertToNodeSpaceAR(worldPos);
                 chuma.setPosition(startPos);

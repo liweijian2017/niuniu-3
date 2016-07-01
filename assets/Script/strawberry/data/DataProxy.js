@@ -44,7 +44,7 @@ DataProxy.extend = function(data){
 			this['$' + key] = value;
 			DataProxy.callFunc(this, key);
 		}}(key));
-	}	
+	}
 	data.addDataObserver = function(key, handler){
 		handler.call(data);
 		return DataProxy.addDataObserver(data, key, handler);
