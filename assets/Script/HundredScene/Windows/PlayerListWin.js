@@ -21,6 +21,10 @@ cc.Class({
 
     //窗口初始化 data[{uid:.....}]
     init:function(data){ 
+        if(!data||data.length == 0){
+            this.numLabel.string = data.length + '人';
+            return;
+        }
         this.numLabel.string = data.length + '人';
         for(var k in data){
             var noSeatItem = cc.instantiate(this.noSeatPrefab);

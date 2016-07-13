@@ -25,10 +25,6 @@ cc.Class({
         Router.chatWin = this;
     },
 
-    start:function(){
-        this.node.active = false;
-    },
-
     //发送信息
     sendMsg:function(){
         var msg = this.textEdit.string;

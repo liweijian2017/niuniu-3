@@ -28,8 +28,4 @@ cc.Class({
             }
         }, 0);
     },
-
-    start:function(){
-        this.node.active = false;
-    }
 });

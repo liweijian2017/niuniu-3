@@ -36,15 +36,6 @@ cc.Class({
     },
     //游戏开始入口
     start:function () {
-        // if(!Game.socket){//模拟登录快速开始过程
-        //     GameData.IN_GAME = 0;
-        //     var list = Http.getConfigData().serverList[0];
-        //     Game.socket = new GameSocket();
-        //     Game.socket.connect(list[0], list[1]);
-        //     this.scheduleOnce(function(){
-        //         Game.socket.sendQuickStart(); //快速开始
-        //     }, 1);
-        // }
         if(!Game.socket)return;
         Game.socket.addEventListener(GameSocket.EVT_PACKET_RECEIVED, this._onProcessPacket, this);//接受服务器包
         Game.socket.resume();//加入房间
@@ -66,7 +57,6 @@ cc.Class({
         if(typeof(this.mapFun[pack.cmd]) == 'function')
             this.mapFun[pack.cmd].call(this, pack);
     },
-
     //成功加入房间
     SVR_JOIN_SUCCESS:function (pack) {
         this.table.init(pack); //初始化桌子

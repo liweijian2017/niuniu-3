@@ -218,7 +218,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 28
+      "height": 24
     },
     "_children": [
       {
@@ -282,8 +282,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 22,
-      "height": 23
+      "width": 18,
+      "height": 19
     },
     "_children": [],
     "_rotationX": 0,
@@ -292,7 +292,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 41,
+      "x": 43,
       "y": 0
     },
     "_skewX": 0,
@@ -375,8 +375,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 23,
-      "height": 24
+      "width": 18,
+      "height": 19
     },
     "_children": [],
     "_rotationX": 0,
@@ -385,7 +385,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 63,
+      "x": 62,
       "y": 0
     },
     "_skewX": 0,
@@ -486,7 +486,7 @@
     "_left": 0,
     "_right": -100,
     "_top": 0,
-    "_bottom": -22,
+    "_bottom": -20,
     "_isAbsLeft": true,
     "_isAbsRight": true,
     "_isAbsTop": true,
@@ -528,7 +528,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 28
+      "height": 24
     },
     "_children": [
       {
@@ -542,7 +542,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -8
+      "y": -10
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2910,6 +2910,7 @@
       "__id__": 1
     },
     "_enabled": true,
+    "_isChange": false,
     "posType": 0,
     "id": -1,
     "posId": 0,
@@ -2922,6 +2923,7 @@
     "playerMultiple": 0,
     "isBanker": false,
     "userData": null,
+    "data": null,
     "spriteAtlas": {
       "__uuid__": "8df51f72-8037-44de-91c1-7dd8d743040c"
     },

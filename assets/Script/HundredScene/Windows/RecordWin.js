@@ -22,11 +22,9 @@ cc.Class({
         this._isChange = true;
     },
 
-    init:function(data){ //第一次加载数据 TODO
-        if(!this._data){
-            this._data = data;
-            this._updateNode();
-        }
+    init:function(data){ //第一次加载数据
+        this._data = data;
+        this._updateNode();
     },
 
     _updateNode:function(){
@@ -39,14 +37,13 @@ cc.Class({
         var children = this.contentNode.children;
         for(var i=0; i<children.length; i++){
             for(var k=0; k<children[i].children.length; k++){
-                if(data[i][k] == 1) {
+                if(data[i] && data[i][k] == 1) {
                     children[i].children[k].getComponent(cc.Sprite).spriteFrame = this.winSpriteFrame;
                 }else {
                     children[i].children[k].getComponent(cc.Sprite).spriteFrame = this.loseSpriteFrame;
                 }
             }
         }
-
     },
 
 });

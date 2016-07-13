@@ -386,23 +386,21 @@ cc.Class({
     //打开表情框
     openExpressionWin:function(){
         this.expressionWin.active = true;
-        this.expressionWin.setPosition(cc.p(0, 0)); 
+        this.expressionWin.getComponent('NodeTransition').show();
     },
     //关闭表情框
     closeExpressionWin:function(){
-        this.expressionWin.setPosition(cc.p(3000, 0)); 
-        this.expressionWin.active = false;
+        this.expressionWin.getComponent('NodeTransition').hide();
     },
     //打开聊天框
     openChatWin:function(){
         this.chatWin.active = true;
-        this.chatWin.setPosition(cc.p(0, 0));
         this.chatWin.getComponent('ChatWin').scrollToBottom();
+        this.chatWin.getComponent('NodeTransition').show();
     },
     //关闭聊天框
     closeChatWin:function(){
-        this.chatWin.setPosition(cc.p(3000, 0)); 
-        this.chatWin.active = false;
+        this.chatWin.getComponent('NodeTransition').hide();
     },
     //提示台费和积分规则
     showTabelInfo:function(venue, blind, roomScore){
@@ -694,13 +692,15 @@ cc.Class({
                 if(flag&&self.isSit){ //在结算中出现弹框
                     //弹框
                     self.oldHint.removeFromParent(); //移除等待开牌提示
-                    self.endPanel.getComponent('RoundEndBox').showRoundBox(1, overPlayers, this.selfSeat);
-                    self.endPanel.getComponent('RoundEndBox').show(5, function () {
-                        //金币动画
+                    self.endPanel.active = true;
+                    self.endPanel.getComponent('RoundEndBox').init(1, overPlayers, this.selfSeat);
+                    self.endPanel.getComponent('NodeTransition').show();
+                    self.endPanel.getComponent('NodeTransition').timingHide(null, 5, function(){
                         self.startGoldAni(pack, function() {
                             //显示剩余时间
                             self.popupToast(null, 15, '等待游戏开始', true);
                         });
+                        self.endPanel.getComponent('RoundEndBox').removeAllItem();
                     });
                 }else { //直接动画
                     //金币动画
@@ -751,10 +751,10 @@ cc.Class({
     dealFivePoker:function(handCard5){
         cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_deal_card.mp3'));
         this.handleAllSeats(function (seat) {
-            if(seat.state > 0){ 
+            if(seat.state > 0){
                 seat.getLastPoker(handCard5);
             }
-        });
+        }.bind(this));
     },
 });
 

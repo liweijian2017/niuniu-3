@@ -12,6 +12,10 @@ cc.Class({
     onLoad: function () {
     },
 
+    onEnable:function(){
+        // this.unscheduleAllCallbacks();
+    },
+
     onDestroy:function(){
         this.unscheduleAllCallbacks();
     },
@@ -22,19 +26,14 @@ cc.Class({
             case -1:
                 break;
             case 0: //右侧进入
-                this.node.x = 500;
                 action = cc.moveTo(this.inTime, cc.p(0,0)).easing(cc.easeBackOut());
                 break;
             case 1: //中心弹出
-                this.node.setScale(0.2);
                 action = cc.scaleTo(this.inTime, 1).easing(cc.easeBackOut());
                 break;
             case 2: //节点顶部扩张开
-                this.node.anchorY = 1;
-                this.node.setScale(1, 0);
                 var scaleTo = cc.scaleTo(this.inTime, 1, 1).easing(cc.easeBackOut());
                 action = cc.sequence(scaleTo, cc.callFunc(function(){
-                    this.node.anchorY = 0.5;
                 }, this));
                 break;
             default:
@@ -42,7 +41,24 @@ cc.Class({
         }
         return action;
     },
-
+    //动画执行前,得初始化所有状态
+    _initInState:function(node){
+        switch(this.inType){
+            case -1:
+                break;
+            case 0: //右侧进入
+                this.node.x = 500;
+                break;
+            case 1: //中心弹出
+                this.node.setScale(0.2);
+                break;
+            case 2: //节点顶部扩张开
+                this.node.setScale(1, 0);
+                break;
+            default:
+                break;
+        }
+    },
     _getOutAction:function(){
         var action = null;
         switch(this.outType){
@@ -55,7 +71,6 @@ cc.Class({
                 action = cc.scaleTo(this.outTime, 0).easing(cc.easeElasticIn(8.0));
                 break;
             case 2: //
-                console.log('收起菜单');
                 this.node.anchorY = 1;
                 action = cc.scaleTo(this.outTime, 1, 0);
                 break;
@@ -63,6 +78,25 @@ cc.Class({
                 break;
         }
         return action;
+    },
+    //动画执行前,得初始化所有状态
+    _initOutState:function(node){
+        switch(this.inType){
+            case -1:
+                break;
+            case 0: //右侧进入
+                this.node.x = 0;
+                break;
+            case 1: //中心弹出
+                this.node.setScale(1);
+                break;
+            case 2: //节点顶部扩张开
+                this.node.anchorY = 0.5;
+                this.node.setScale(1, 1);
+                break;
+            default:
+                break;
+        }
     },
 
     _showNode:function(){
@@ -89,17 +123,21 @@ cc.Class({
     //显示节点以对应的动画方式
     show:function(type){
         if(type) this.inType = type;
+        this._initInState();
         this._showNode();
     },
     //隐藏节点以对应的动画方式
     hide:function(type){
         if(type) this.outType = type;
+        this._initOutState();
         this._hideNode();
     },
     //定时的隐藏节点
     timingHide:function(type, time, cb){ //定时器处理
         if(type) this.outType = type;
+        this.unscheduleAllCallbacks();
         return this.scheduleOnce(function() {
+            this._initOutState();
             this._hideNode(cb);
         }, time);
     },

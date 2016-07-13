@@ -98,6 +98,15 @@ cc.Class({
         }
     },
     
+    //进入百人场
+    joinHundred: function () {
+        Game.socket.pause();
+        var canvas = cc.director.getScene().getChildByName('Canvas');
+        canvas.getComponent('PopUp').showLoadding();
+        Game.socket.sendJoinRoom(58);
+    },
+
+
     //进入房间列表界面
     roomListPressed: function () {
         this.mainNode.active = false;

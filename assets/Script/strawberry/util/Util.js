@@ -85,7 +85,22 @@ var Util = {
       pos.y = Math.random()*height/2 * puls2;
       return pos;
   },
-
+  contains:function(arr, obj){
+      for(var k in arr){
+        if(arr[k] == obj)return true;
+      }
+      return false;
+  },
+  formatDate:function(timestamp){
+    var date = new Date(timestamp);
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds(); 
+    return M+D+h+m+s;
+  },
   base64_decode: function(encodedData) {
     var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
     var o1

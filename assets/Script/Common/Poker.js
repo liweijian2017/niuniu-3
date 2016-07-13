@@ -107,7 +107,7 @@ cc.Class({
         }else {
             this.back.node.active = true;
         }
-        this.node.setScale(this.scale);
+        // this.node.setScale(this.scale);
     },
     
     getValue:function(cardUint){

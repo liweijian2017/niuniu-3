@@ -18,7 +18,7 @@ var Game = cc.Class({
         if(!Game.socket) {
             var list = Http.getConfigData().serverList[0];
             Game.socket = new GameSocket();
-            Game.socket.connect(list[0], list[1]);            
+            Game.socket.connect(list[0], list[1]);
         };
         //初始化广播接收器
         Router.boradcastItemPrefab = this.boradcastItemPrefab;
@@ -26,3 +26,7 @@ var Game = cc.Class({
     },
 });
 
+
+// Array.prototype.contains = function(item){ //添加数组包含判断
+//     return RegExp("\\b"+item+"\\b").test(this);
+// };

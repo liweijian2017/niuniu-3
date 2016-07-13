@@ -116,9 +116,9 @@ var PacketBuilder = cc.Class({
             if( len > 0 ){
                 for (var i1 = 0; i1 < val.length; i1++) {
                     var v1 = val[i1]         
-                    if (typeof (fmt.fmt) == "array" && typeof (fmt.fmt[0]) == "object") {
+                    if ($.isArray(fmt.fmt) && typeof (fmt.fmt[0]) == "object") {
                         for (var i2 = 0; i2 < fmt.fmt.length; i2++) {
-                            v2 = fmt.fmt[i2]                    
+                            var v2 = fmt.fmt[i2]                    
                             var name = v2.name
                             var dtype = v2.type
                             var value = v1[name]
@@ -136,7 +136,7 @@ var PacketBuilder = cc.Class({
             }
         }
     },
-    
+
     build : function (){
         var buf = new Socket.ByteArray()
         //写包头，包体长度先写0
@@ -168,7 +168,7 @@ var PacketBuilder = cc.Class({
             buf.writeUShort(buf.getLen() - 8)
             buf.setPos(buf.getLen())
         }  
-        cc.info("BUILD PACKET ==> %d(%s)", this.cmd_, buf.getLen())
+        cc.info("BUILD PACKET ==> %d(%s)", this.cmd_, buf.getLen(), this.cmd_.toString(16))
         buf.cmd = this.cmd_
         return buf
     }

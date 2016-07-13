@@ -15,6 +15,12 @@ SendCards:发牌;
 OpenCards:开牌;
 dividePoint:结算
 closeRoom:关闭房间
+
+服务器协议状态:
+0 等待达成游戏开始条件        -------- NullState  房间一人都没有,需要有人才能开始
+1:符合条件，已经可以下注了    -------- WaitingBet  等待下注
+2:下注结束                    -------- WaitingSendCards 等待发牌
+100:本轮结束，等待下一轮开始  -------- WaitingStart 等待游戏开始
 */
 var FSM = require('FSM'); //有限状态机
 var HundredStates = cc.Class({
@@ -40,6 +46,9 @@ var HundredStates = cc.Class({
 　　　　　　],
             callbacks: callbacks
         });
+        return this.fsm;
+    },
+    getFsm:function(){
         return this.fsm;
     },
 });

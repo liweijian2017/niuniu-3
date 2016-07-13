@@ -1,7 +1,7 @@
 //玩家操控面板
 var Util = require('Util');
-// var BaseComponent = require('BaseComponent');
 var HundredData = require('HundredData');
+var HundredStates = require('HundredStates');
 
 cc.Class({
     extends: cc.Component,
@@ -48,45 +48,77 @@ cc.Class({
     onLoad: function () {
         console.log('百人场-启动-操控面板...');
         this._pouringBtns = this.node.getChildByName('PouringBtns'); //下注按钮容器
-        this.handle = HundredData.bindCallF('handlePanel', this._updateView.bind(this));
+        // HundredData.bindCallF('handlePanel', this._updateView.bind(this));
+        HundredData.bindCallF('handlePanel:point', this._updatePoint.bind(this));
+        HundredData.bindCallF('handlePanel:name', this._updateName.bind(this));
+        HundredData.bindCallF('handlePanel:score', this._updateScore.bind(this));
+        HundredData.bindCallF('handlePanel:type', this._updateType.bind(this));
+        //庄家内容
+        HundredData.bindCallF('handlePanel:2:gain', this._updateGain.bind(this));
+        HundredData.bindCallF('handlePanel:2:lose', this._updateLose.bind(this));
+        HundredData.bindCallF('handlePanel:2:total', this._updateTotal.bind(this));
     },
 
-    _updateView:function(data){ //数据发生变动
-        if(data.type !== data.preType){ //先隐藏
-            if(data.preType == -2) { //第一次加载不做动画
+    _updatePoint:function(point){
+        this.getComponent('UserComponent').setPoint(point);
+        HundredData['userPoint'] = point;
+        return point;
+    },
+
+    _updateName:function(name){
+        this.nameLabel.string = Util.formatName(name, 6);
+        return name;
+    },
+
+    _updateScore:function(score){
+        this.scoreLabel.string = Util.bigNumToStr(score);
+        return score;
+    },
+    //操控面板类型变化
+    _updateType:function(type){
+        if(type != HundredData['handlePanel'].preType){ //先隐藏
+            if(HundredData['handlePanel'].preType == -2) { //第一次加载不做动画
                 this.node.setScale(1,0);
-                this._updataByType(data);
-                return;
+                this._updateType2(type);
+                return type;
             }
             var scale = cc.scaleTo(0.2, 1, 0);
-            this.node.runAction(cc.sequence(scale, cc.callFunc(this._updataByType.bind(this, data), this)));
-        }else { //修改数据
-            this._changeView(data);
+            this.node.runAction(cc.sequence(scale, cc.callFunc(this._updateType2.bind(this, type), this)));
         }
+        return type;
     },
-
-    _updataByType:function(data){
-        if(data.type == -1) return; //修改的是隐藏 则不显示
-        var scale = cc.scaleTo(0.2, 1, 1);
-        this.node.runAction(cc.sequence(cc.callFunc(this._changeView.bind(this, data), this), scale));
-    },
-
-    _changeView:function(data){
-        data.preType = data.type; //记录现在的type
-        this.nameLabel.string = Util.formatName(data.name, 6);
-        this.pointLabel.string = Util.bigNumToStr(data.point);
-        this.scoreLabel.string = Util.bigNumToStr(data.score);
-        if(data.type == 0 || data.type == 1){
+    //显示对应类型的操控面板
+    _updateType2:function(type){
+        if(type == -1) return; //修改的是隐藏 则不显示
+        if(type != 2){
             this._pouringBtns.active = true;
             this.bankerPanel.active = false;
-            this.updateBetBtns(data[data.type]);
-        } else { //玩家坐庄
+            this.updateBetBtns(HundredData['handlePanel'][type]);
+        }else if(type == 2){ //庄家
             this._pouringBtns.active = false;
             this.bankerPanel.active = true;
-            this.gainLabel.string = Util.bigNumToStr2(data[data.type].gain);
-            this.loseLabel.string = Util.bigNumToStr2(data[data.type].lose);
-            this.totalLabel.string = Util.bigNumToStr2(data[data.type].total);
+            this.gainLabel.string = Util.bigNumToStr2(HundredData['handlePanel'][type].gain);
+            this.loseLabel.string = Util.bigNumToStr2(HundredData['handlePanel'][type].lose);
+            this.totalLabel.string = Util.bigNumToStr2(HundredData['handlePanel'][type].total);
         }
+        HundredData['handlePanel'].preType = type;
+        var scale = cc.scaleTo(0.2, 1, 1);
+        this.node.runAction(scale);
+    },
+
+    _updateGain:function(gain){
+        this.gainLabel.string = Util.bigNumToStr2(gain);
+        return gain;
+    },
+
+    _updateLose:function(lose){
+        this.loseLabel.string = Util.bigNumToStr2(lose);
+        return lose;
+    },
+
+    _updateTotal:function(total){
+        this.totalLabel.string = Util.bigNumToStr2(total);
+        return total;
     },
 
     updateBetBtns:function(betValues){ //更新筹码按钮
@@ -101,8 +133,15 @@ cc.Class({
             betBtn.on(cc.Node.EventType.TOUCH_END, this._handleClick.bind(this), this);
             this._betBtns.push(betBtn);
         }
+        //更换后的默认值
         this._betBtns[0].getComponent('BetBtn').setAttr('_isSelect', true);
         HundredData['handlePanel'].selectValue = this._betBtns[0].getComponent('BetBtn')._value;
+        //更换后的默认状态
+        if(HundredStates.getFsm().is('WaitingBet')){
+            this.open();
+        }else {
+            this.close();
+        }
     },
 
     _handleClick:function(event){
@@ -110,7 +149,6 @@ cc.Class({
         for(var k in this._betBtns){
             if(this._betBtns[k] === event.currentTarget){
                 event.currentTarget.getComponent('BetBtn').setAttr('_isSelect', true);
-                console.log(HundredData['handlePanel'].selectValue);
                 HundredData['handlePanel'].selectValue = event.currentTarget.getComponent('BetBtn')._value;
             }else {
                 this._betBtns[k].getComponent('BetBtn').setAttr('_isSelect', false);

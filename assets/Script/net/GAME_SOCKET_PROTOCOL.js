@@ -428,7 +428,7 @@ CONFIG[P.BROADCAST_ALL_MESSAGE_RET] = {
 
 // ---------------------------百人场--------------------------------
 
-
+//客户端请求加入房间
 P.HUNDRED_CLI_JOIN = 0xa001
 CONFIG[P.HUNDRED_CLI_JOIN] = {
     ver: 1,
@@ -701,8 +701,8 @@ CONFIG[P.HUNDRED_SVR_SIT_DOWN] = {
         }, //用户家乡
     ],
 }
-
-P.HUNDRED_SVR_SIT_DOWN_FAIL = 0xa006 //坐下失败
+//坐下失败
+P.HUNDRED_SVR_SIT_DOWN_FAIL = 0xa006 
 CONFIG[P.HUNDRED_SVR_SIT_DOWN_FAIL] = {
     ver: 1,
     fmt:[
@@ -749,7 +749,7 @@ CONFIG[P.HUNDRED_SVR_STAND_UP_FAIL] = {
     ],
 }
 
-// 离开房间
+// 离开房间 
 P.HUNDRED_CLI_LEAVE = 0xa010
 CONFIG[P.HUNDRED_CLI_LEAVE] = {
     ver: 1,
@@ -767,7 +767,7 @@ CONFIG[P.HUNDRED_SVR_HALFWAY_LEAVE] = {
     ver: 1
 }
 
-// 离开房间
+// 离开房间 code=0:正常离开 code=1:超时  code=2:没钱
 P.HUNDRED_SVR_LEAVE_RET = 0xa012
 CONFIG[P.HUNDRED_SVR_LEAVE_RET] = {
     ver: 1,
@@ -779,9 +779,9 @@ CONFIG[P.HUNDRED_SVR_LEAVE_RET] = {
     ]
 }
 
-// 下注
-P.HUNDRED_CLI_BET = 0xa013
-CONFIG[P.HUNDRED_CLI_BET] = {
+// 批量下注
+P.HUNDRED_CLI_MULTI_BET = 0xa013
+CONFIG[P.HUNDRED_CLI_MULTI_BET] = {
     ver: 1,
     fmt:[
         {
@@ -804,10 +804,28 @@ CONFIG[P.HUNDRED_CLI_BET] = {
         },
     ]
 }
-
+// 下注失败
+P.HUNDRED_SVR_BET_FAIL = 0xa014
+CONFIG[P.HUNDRED_SVR_BET_FAIL] = {
+    ver: 1,
+    fmt:[
+        {
+            name: "errorCode",
+            type: T.USHORT
+        }, //错误代码
+        {
+            name: "buyinChips",
+            type: T.ULONG
+        }, //用户实时筹码数
+        {
+            name: "acceptChips",
+            type: T.ULONG
+        } //闲家或庄家可接受的最大下注
+    ],
+}
 // 下注成功
-P.HUNDRED_SVR_BET_SUCCESS = 0xa014
-CONFIG[P.HUNDRED_SVR_BET_SUCCESS] = {
+P.HUNDRED_SVR_MULTI_BET_SUCCESS = 0xa015
+CONFIG[P.HUNDRED_SVR_MULTI_BET_SUCCESS] = {
     ver: 1,
     fmt:[
         {
@@ -842,57 +860,6 @@ CONFIG[P.HUNDRED_SVR_BET_SUCCESS] = {
         },
     ]
 }
-
-// 同步下注信息
-P.HUNDRED_SVR_SYNC_BET_INFO = 0xa023
-CONFIG[P.HUNDRED_SVR_SYNC_BET_INFO] = {
-    ver: 1,
-    fmt:[
-        {name: "seatId",type: T.UINT}, //座位ID
-        {
-            name: "bets",
-            type: T.ARRAY,
-            fmt:[
-                {name: "potId",type: T.UINT}, //下注奖池ID
-                {name: "seatId",type: T.UINT}, //座位号(1-8号是坐下玩家下注信息, 99是自己的下注信息, 100是其他旁观人员的下注信息)
-                {name: "betChips",type: T.ULONG}, //下注额度
-            ]
-        },
-        // {
-        // name : "maxbet",
-        // type : T.ARRAY,
-        // fmt :[
-        // {name : "potId",   type : T.UINT},  //下注奖池ID
-        // {name : "uid",     type : T.UINT},  //下注最大玩家的uid
-        // }
-        // },
-        {
-            name: "isEnd",
-            type: T.USHORT
-        } //0:未结束 1:结束
-    ]
-}
-
-// 下注失败
-P.HUNDRED_SVR_BET_FAIL = 0xa015
-CONFIG[P.HUNDRED_SVR_BET_FAIL] = {
-    ver: 1,
-    fmt:[
-        {
-            name: "errorCode",
-            type: T.USHORT
-        }, //错误代码
-        {
-            name: "buyinChips",
-            type: T.ULONG
-        }, //用户实时筹码数
-        {
-            name: "acceptChips",
-            type: T.ULONG
-        } //闲家或庄家可接受的最大下注
-    ],
-}
-
 // 游戏开始
 P.HUNDRED_SVR_GAME_START = 0xa016
 CONFIG[P.HUNDRED_SVR_GAME_START] = {
@@ -904,8 +871,8 @@ CONFIG[P.HUNDRED_SVR_GAME_START] = {
         {name: "vip",type: T.BYTE}, //VIP标识
         {name: "img",type: T.STRING}, //用户头像
         {name: "gender",type: T.STRING}, //用户性别
-        {name: "buyinChips",type: T.ULONG}, //买入筹码数
-        {name: "otherChips",type: T.ULONG}, //未携带上庄的筹码数
+        {name: "buyinChips",type: T.ULONG}, //庄家在庄上的筹码数
+        {name: "otherChips",type: T.ULONG}, //庄家剩余筹码数
         {name: "platFlag",type: T.INT}, //平台标识
         {name: "giftId",type: T.INT}, //礼物ID
         {name: "exp",type: T.UINT}, //用户经验
@@ -945,7 +912,7 @@ CONFIG[P.HUNDRED_SVR_GAME_OVER] = {
         {name: "dealerCard4",type: T.USHORT}, //手牌4
         {name: "dealerCard5",type: T.USHORT}, //手牌5
         {name: "dealerCardType",type: T.BYTE}, //牌型
-        {name: "dealerCardPoint",type: T.BYTE}, //点数
+        // {name: "dealerCardPoint",type: T.BYTE}, //点数
         { // 闲家的牌信息
             name: "pokers",
             type: T.ARRAY,
@@ -958,7 +925,7 @@ CONFIG[P.HUNDRED_SVR_GAME_OVER] = {
                 {name: "handCard4",type: T.USHORT}, //手牌4
                 {name: "handCard5",type: T.USHORT}, //手牌5
                 {name: "cardType",type: T.BYTE}, //牌型
-                {name: "cardPoint",type: T.BYTE}, //点数
+                // {name: "cardPoint",type: T.BYTE}, //点数
             ]
         },
         { // 闲家的下注信息
@@ -987,6 +954,7 @@ CONFIG[P.HUNDRED_SVR_GAME_OVER] = {
                 {name: "uid",type: T.UINT}, //UID
                 {name: "img",type: T.STRING}, //头像
                 {name: "chips",type: T.LONG}, //筹码变化
+                {name: "nick",type: T.STRING}, //名字
             ]
         },
         {name: "luckChips",type: T.ULONG}, //分得的幸运奖池金币数
@@ -1052,23 +1020,23 @@ P.HUNDRED_SVR_CANCEL_DEALER_SUCCESS = 0xa022
 CONFIG[P.HUNDRED_SVR_CANCEL_DEALER_SUCCESS] = {
     ver: 1
 }
-
-// 服务端取消上庄失败
-P.HUNDRED_SVR_CANCEL_DEALER_FAIL = 0xa041
-CONFIG[P.HUNDRED_SVR_CANCEL_DEALER_FAIL] = {
-    ver: 1
-}
-
-// 服务端通知客户端,轮到你上庄，但是你不符合条件
-P.HUNDRED_SVR_NOTIFY_WAITING_DEALER = 0xa051
-CONFIG[P.HUNDRED_SVR_NOTIFY_WAITING_DEALER] = {
+// 同步下注信息
+P.HUNDRED_SVR_SYNC_BET_INFO = 0xa023
+CONFIG[P.HUNDRED_SVR_SYNC_BET_INFO] = {
     ver: 1,
     fmt:[
+        {name: "seatId",type: T.UINT}, //座位ID
         {
-            name: "errorCode",
-            type: T.USHORT
+            name: "bets",
+            type: T.ARRAY,
+            fmt:[
+                {name: "potId",type: T.UINT}, //下注奖池ID
+                {name: "seatId",type: T.UINT}, //座位号(1-4号是坐下玩家下注信息, 99是自己的下注信息, 100是其他旁观人员的下注信息)
+                {name: "betChips",type: T.ULONG}, //下注额度
+            ]
         },
-    ],
+        {name: "isEnd",type: T.USHORT} //0:未结束 1:结束
+    ]
 }
 
 // 离线
@@ -1096,7 +1064,7 @@ CONFIG[P.HUNDRED_CLI_LIST_DEALER] = {
 }
 
 // 服务端返回上庄玩家列表
-P.HUNDRED_SRV_LIST_RET = 0xa027
+P.HUNDRED_SRV_LIST_RET = 0xa026
 CONFIG[P.HUNDRED_SRV_LIST_RET] = {
     ver: 1,
     fmt:[
@@ -1104,41 +1072,20 @@ CONFIG[P.HUNDRED_SRV_LIST_RET] = {
             name: "players",
             type: T.ARRAY,
             fmt:[
-                {
-                    name: "uid",
-                    type: T.UINT
-                }, //UID
-                {
-                    name: "nick",
-                    type: T.STRING
-                }, //用户昵称
-                {
-                    name: "vip",
-                    type: T.BYTE
-                }, //VIP标识
-                {
-                    name: "img",
-                    type: T.STRING
-                }, //用户头像
-                {
-                    name: "gender",
-                    type: T.STRING
-                }, //用户性别
-                {
-                    name: "buyinChips",
-                    type: T.ULONG
-                }, //buyin筹码
-                {
-                    name: "readyBuyin",
-                    type: T.ULONG
-                }, //准备携带上庄的筹码
+                {name : "uid",        type : T.UINT},    //UID
+                {name : "nick",       type : T.STRING},  //用户昵称
+                {name : "vip",        type : T.BYTE},    //VIP标识
+                {name : "img",        type : T.STRING},  //用户头像
+                {name : "gender",     type : T.STRING} , //用户性别
+                {name : "buyinChips", type : T.ULONG},   //buyin筹码
+                {name : "readyBuyin", type : T.ULONG},   //准备携带上庄的筹码
             ]
         },
     ]
 }
 
 // 无座的玩家列表
-P.HUNDRED_CLI_LIST_NO_SEAT_PLAYER = 0xa026
+P.HUNDRED_CLI_LIST_NO_SEAT_PLAYER = 0xa027
 CONFIG[P.HUNDRED_CLI_LIST_NO_SEAT_PLAYER] = {
     ver: 1,
     fmt:[
@@ -1149,43 +1096,7 @@ CONFIG[P.HUNDRED_CLI_LIST_NO_SEAT_PLAYER] = {
     ],
 }
 
-// 服务端返回无座玩家列表
-P.HUNDRED_SRV_LIST_NO_SEAT_PLAYER_RET = 0xa042
-CONFIG[P.HUNDRED_SRV_LIST_NO_SEAT_PLAYER_RET] = {
-    ver: 1,
-    fmt:[
-        {
-            name: "players",
-            type: T.ARRAY,
-            fmt:[
-                {
-                    name: "uid",
-                    type: T.UINT
-                }, //UID
-                {
-                    name: "nick",
-                    type: T.STRING
-                }, //用户昵称
-                {
-                    name: "vip",
-                    type: T.BYTE
-                }, //VIP标识
-                {
-                    name: "img",
-                    type: T.STRING
-                }, //用户头像
-                {
-                    name: "gender",
-                    type: T.STRING
-                }, //用户性别
-                {
-                    name: "buyinChips",
-                    type: T.ULONG
-                }, //buyin筹码
-            ]
-        },
-    ]
-}
+
 
 // 请求输赢记录
 P.HUNDRED_CLI_LIST_RECORD = 0xa028
@@ -1370,66 +1281,25 @@ P.HUNDRED_SRV_LIST_LUCK_RECORD = 0xa039
 CONFIG[P.HUNDRED_SRV_LIST_LUCK_RECORD] = {
     ver: 1,
     fmt:[
-        {
-            name: "luckPotChips",
-            type: T.ULONG
-        },
-        {
-            name: "handCard1",
-            type: T.USHORT
-        }, //手牌1
-        {
-            name: "handCard2",
-            type: T.USHORT
-        }, //手牌2
-        {
-            name: "handCard3",
-            type: T.USHORT
-        }, //手牌3
-        {
-            name: "cardType",
-            type: T.BYTE
-        }, //牌型
-        {
-            name: "cardPoint",
-            type: T.BYTE
-        }, //点数
-        {
-            name: "totalChips",
-            type: T.ULONG
-        },
-        {
-            name: "createTime",
-            type: T.UINT
-        },
+        {name : "luckPotChips", type : T.ULONG},
+        {name : "handCard1",    type : T.USHORT},
+        {name : "handCard2",    type : T.USHORT},
+        {name : "handCard3",    type : T.USHORT},
+        {name : "handCard4",    type : T.USHORT},
+        {name : "handCard5",    type : T.USHORT},
+        {name : "cardType",     type : T.BYTE},  
+        {name : "totalChips",   type : T.ULONG},
+        {name : "createTime",   type : T.UINT},
         {
             name: "players",
             type: T.ARRAY,
             fmt:[
-                {
-                    name: "uid",
-                    type: T.UINT
-                }, //UID
-                {
-                    name: "img",
-                    type: T.STRING
-                }, //头像
-                {
-                    name: "winChips",
-                    type: T.ULONG
-                }, //赢取的筹码
-                {
-                    name: "vip",
-                    type: T.BYTE
-                }, //VIP标识
-                {
-                    name: "nick",
-                    type: T.STRING
-                }, //用户昵称
-                {
-                    name: "gender",
-                    type: T.STRING
-                }, //用户性别
+                {name : "uid",        type : T.UINT},   //UID
+                {name : "img",        type : T.STRING}, //头像
+                {name : "winChips",   type : T.ULONG},  //赢取的筹码
+                {name : "vip",        type : T.BYTE}   ,//VIP标识
+                {name : "nick",       type : T.STRING} ,//用户昵称
+                {name : "gender",     type : T.STRING} ,//用户性别
             ]
         },
     ]
@@ -1446,7 +1316,48 @@ CONFIG[P.HUNDRED_SRV_LIST_LUCK_RECORD_FAIL] = {
         },
     ]
 }
-
+// 服务端取消上庄失败
+P.HUNDRED_SVR_CANCEL_DEALER_FAIL = 0xa041
+CONFIG[P.HUNDRED_SVR_CANCEL_DEALER_FAIL] = {
+    ver: 1
+}
+// 服务端返回无座玩家列表
+P.HUNDRED_SRV_LIST_NO_SEAT_PLAYER_RET = 0xa042
+CONFIG[P.HUNDRED_SRV_LIST_NO_SEAT_PLAYER_RET] = {
+    ver: 1,
+    fmt:[
+        {
+            name: "players",
+            type: T.ARRAY,
+            fmt:[
+                {
+                    name: "uid",
+                    type: T.UINT
+                }, //UID
+                {
+                    name: "nick",
+                    type: T.STRING
+                }, //用户昵称
+                {
+                    name: "vip",
+                    type: T.BYTE
+                }, //VIP标识
+                {
+                    name: "img",
+                    type: T.STRING
+                }, //用户头像
+                {
+                    name: "gender",
+                    type: T.STRING
+                }, //用户性别
+                {
+                    name: "buyinChips",
+                    type: T.ULONG
+                }, //buyin筹码
+            ]
+        },
+    ]
+}
 // 重新加载房间
 P.HUNDRED_RELOAD_ROOM = 0xa043
 CONFIG[P.HUNDRED_RELOAD_ROOM] = {
@@ -1543,6 +1454,43 @@ CONFIG[P.HUNDRED_SRV_ADD_BUYIN_FAIL] = {
     ]
 }
 
+// 服务端通知客户端,轮到你上庄，但是你不符合条件
+P.HUNDRED_SVR_NOTIFY_WAITING_DEALER = 0xa051
+CONFIG[P.HUNDRED_SVR_NOTIFY_WAITING_DEALER] = {
+    ver: 1,
+    fmt:[
+        {
+            name: "errorCode",
+            type: T.USHORT
+        },
+    ],
+}
+
+// rebuy
+P.HUNDRED_CLI_REBUY = 0xa052
+CONFIG[P.HUNDRED_CLI_REBUY] = {
+    ver : 1,
+    fmt : [
+        {name:"uid",   type:T.UINT},
+        {name:"money", type:T.ULONG}, //玩家当前的金币数
+    ]
+}
+
+// rebuy成功返回
+P.HUNDRED_SRV_REBUY = 0xa053
+CONFIG[P.HUNDRED_SRV_REBUY] = {
+    ver : 1,
+    fmt : [
+        {name : "buyinChips", type : T.ULONG}, // rebuy后的buyin
+    ]
+}
+
+// rebuy失败返回
+P.HUNDRED_SRV_REBUY_FAILED = 0xa054
+CONFIG[P.HUNDRED_SRV_REBUY_FAILED] = {
+    ver : 1,
+    fmt : []
+}
 
 
 module.exports = PROTOCOL;

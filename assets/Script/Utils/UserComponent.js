@@ -1,5 +1,6 @@
 var BaseComponent = require('BaseComponent');
 var Util = require('Util');
+var ImageLoader = require('ImageLoader');
 cc.Class({
     extends: BaseComponent,
 
@@ -28,8 +29,8 @@ cc.Class({
     },
 
     _updateNode:function(){
-        // TODO 头像处理
-        this.nameLabel.string = Util.formatName(this._nick, 6);
+        if(this._nick)
+            this.nameLabel.string = Util.formatName(this._nick, 6);
         if(this.pointType == 0){ //处理数值
             this.pointLabel.string = Util.bigNumToStr(this._point);
         }else if(this.pointType == 1){
@@ -38,6 +39,14 @@ cc.Class({
             this.pointLabel.string = str;
         }else {
             this.pointLabel.string = Util.bigNumToStr(this._point);
+        }
+        if(this._img){
+            var self = this;
+            ImageLoader.load(this._img, function(ret, node){
+                if(ret) {
+                    self.imgSprite.spriteFrame = node.getComponent(cc.Sprite).spriteFrame;  
+                }              
+            });
         }
     },
     //设置数据
@@ -48,7 +57,6 @@ cc.Class({
             this.imgSprite.spriteFrame = img;
         else {
             this._img = img;
-            // throw new Error("头像设置出错:" + img);
         }
         this._updateNode();
     },
@@ -59,5 +67,38 @@ cc.Class({
         this._img = '';
         this._updateNode();
     },
+    //设置金币
+    setPoint:function(point){
+        var change = point - this._point;
+        this._point = point;
+        this._updateNode();
+        if(change == 0) return;
+        var label = new cc.Node();
+        label.addComponent(cc.Label);
+        label.color = new cc.Color(255, 255, 0);
+        label.getComponent(cc.Label).fontSize = 18;
+
+        label.getComponent(cc.Label).string = (change > 0 ? "+" : "-") + Util.bigNumToStr(Math.abs(change));
+        label.opacity = 0;
+        // label.parent = this.node;
+        this.node.addChild(label, 1000, 1000);
+        var pt = this.pointLabel.node.getPosition();
+        // pt.x = pt.x + 40;
+        pt.y = pt.y + 20;
+        label.setPosition(pt);
+        label.runAction(cc.sequence(cc.fadeIn(0.1), cc.delayTime(0.3), cc.moveBy(0.8, 0, 30), cc.fadeOut(0.2), cc.callFunc(function(){
+            this.removeFromParent();
+        }, label)));
+    },
+
+    setName:function(nick){
+        this._nick = nick;
+        this._updateNode();
+    },
+
+    setHeadImg:function(img){
+        this._img = img;
+        this._updateNode();
+    }
 
 });

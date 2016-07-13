@@ -59,7 +59,7 @@ cc.Class({
         }
     }, 
     //设置数据
-    showRoundBox: function (type, overPlayers, selfSeat) {
+    init: function (type, overPlayers, selfSeat) {
         var selfChange = 0;
         for(var i=0; i<overPlayers.length; i++){
             if(overPlayers[i].player.id == selfSeat.getComponent("SelfSeat").id){

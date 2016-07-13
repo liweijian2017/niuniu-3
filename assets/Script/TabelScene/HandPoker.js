@@ -65,7 +65,7 @@ cc.Class({
             poker.getComponent('Poker').init(pokersData[i]);
             this.pokers.push(poker);
             this.node.addChild(poker);
-            poker.getComponent('Poker').scale = 0.3;
+            poker.scale = 0.3;
             //3.设置位置初始位置
             poker.getComponent('Poker').node.setPosition(this.getTableForNodePos());
             poker.getComponent('Poker').updateSprites();
@@ -76,17 +76,17 @@ cc.Class({
             poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.25*i), ani));
         };
     },
+    //发四张牌(无动画)
     doDealFourPoker:function(pokersData){
         for(var i=0; i<pokersData.length; i++){
             var poker = cc.instantiate(this.pokerPrefab);
             poker.getComponent('Poker').init(pokersData[i]);
-            poker.getComponent('Poker').scale = 0.7;
+            poker.scale = 0.7;
             this.pokers.push(poker);
             this.node.addChild(poker);
         };
         this.updatePokers(); //更新位置显示
     },
-
     //发四张牌带有动画的
     doDealFourPoker_Ani:function(pokersData, cb){
         var count = 0; //计算发牌的数量
@@ -95,22 +95,21 @@ cc.Class({
             poker.getComponent('Poker').init(pokersData[i]);
             this.pokers.push(poker);
             this.node.addChild(poker);
-            poker.getComponent('Poker').scale = 0.3;
+            poker.scale = 0.3;
             //3.设置位置初始位置
             poker.getComponent('Poker').node.setPosition(this.getTableForNodePos());
             poker.getComponent('Poker').updateSprites();
             //4.进行移动动画
-            var ani = cc.spawn(cc.moveTo(0.3, cc.p(23+i*15, 0)), cc.scaleTo(0.3, 0.7), cc.callFunc(function(){
+            var ani = cc.spawn(cc.moveTo(0.5, cc.p(23+i*15, 0)).easing(cc.easeOut(3.0)), cc.scaleTo(0.5, 0.7), cc.callFunc(function(){
                 cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_deal_card.mp3'));
             }, this));
-            var endFun = cc.callFunc(function(){
-                //结束
+            var endFun = cc.callFunc(function(){//结束
                 ++count;
                 if(count == 4){
                     if(cb())return;
                 }
             },this);
-            poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.25*i), ani, endFun));
+            poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.1*i), endFun, ani));
         };
     },
     //更新手牌数据
@@ -199,9 +198,9 @@ cc.Class({
         var endPos = cc.p(23+4*15, 0);
         this.pokers.push(poker);
         this.node.addChild(poker, 5);
-        poker.getComponent('Poker').scale = 0.7;
+        poker.scale = 0.3;
         poker.getComponent('Poker').updateSprites();
-        poker.getComponent('Poker').node.runAction(cc.moveTo(0.8, endPos));
+        poker.getComponent('Poker').node.runAction(cc.spawn(cc.moveTo(0.5, endPos), cc.scaleTo(0.5, 0.7)));
     },
     //转到完成状态
     doFinish:function(){

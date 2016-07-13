@@ -140,7 +140,7 @@ var SocketService = cc.Class({
         }else{
             for (var i = 0; i < packets.length; i++) {
                 var v = packets[i];
-                cc.info("[====PACK====][%d]\n==>%s", v.cmd, JSON.stringify(v));
+                cc.info("[====PACK====][%d]\n==>%s", v.cmd, JSON.stringify(v), v.cmd.toString(16));
                 this.onPacketReceived(v);
             }
         }
@@ -229,9 +229,9 @@ var SocketService = cc.Class({
                     this.delayPackCache_ = []
                 }
                 this.delayPackCache_[this.delayPackCache_.length] = pack
-                cc.info("paused cmd:%d", pack.cmd)
+                cc.info("paused cmd:%", pack.cmd, pack.cmd.toString(16))
             }else{
-                cc.info("dispatching cmd:%d", pack.cmd)
+                cc.info("dispatching cmd:%", pack.cmd, pack.cmd.toString(16))
                 this.dispatchEventWith(SocketService.EVT_PACKET_RECEIVED, false, data);
             }
         }

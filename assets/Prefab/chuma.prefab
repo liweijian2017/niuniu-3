@@ -3,6 +3,7 @@
     "__type__": "cc.Prefab",
     "_name": "",
     "_objFlags": 0,
+    "_rawFiles": null,
     "data": {
       "__id__": 1
     }
@@ -57,7 +58,8 @@
     ],
     "_prefab": {
       "__id__": 3
-    }
+    },
+    "groupIndex": 0
   },
   {
     "__type__": "cc.Sprite",

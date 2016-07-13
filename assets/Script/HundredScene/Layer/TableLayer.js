@@ -16,16 +16,5 @@ cc.Class({
     },
 
     start:function(){
-    	// var data = {
-     //    	name:'系统',
-     //    	img:'',
-     //    	point:'1000000000'
-     //    }
-     //    this.setbanker(data);
     },
-
-    // setbanker:function(data){
-    // 	this.bankerSeat.setData(data);
-    // }
-
 });

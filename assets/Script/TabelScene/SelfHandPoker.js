@@ -33,7 +33,7 @@ cc.Class({
             var ani = cc.spawn(cc.moveTo(0.3, cc.p(i*poker.getComponent('Poker').node.width, 0)), cc.scaleTo(0.3, 1), cc.callFunc(function(){
                 cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_deal_card.mp3'));
             }, this));
-            poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.25*i), ani));
+            poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.1*i), ani));
         }
     },
 
@@ -45,22 +45,21 @@ cc.Class({
             poker.getComponent('Poker').init(pokersData[i]);
             this.pokers.push(poker);
             this.node.addChild(poker);
+            poker.scale = 0.3;
             //3.设置位置初始位置
             poker.getComponent('Poker').node.setPosition(this.getTableForNodePos());
-            poker.getComponent('Poker').node.setScale(0.3);
             poker.getComponent('Poker').updateSprites();
             //4.进行移动动画
-            var ani = cc.spawn(cc.moveTo(0.3, cc.p(i*poker.getComponent('Poker').node.width, 0)), cc.scaleTo(0.3, 1), cc.callFunc(function(){
+            var ani = cc.spawn(cc.moveTo(0.5, cc.p(i*poker.getComponent('Poker').node.width, 0)), cc.scaleTo(0.5, 1), cc.callFunc(function(){
                 cc.audioEngine.playEffect(cc.url.raw('resources/sound/game_deal_card.mp3'));
             }, this));
-            var endFun = cc.callFunc(function(){
-                //结束
+            var endFun = cc.callFunc(function(poker){
                 ++count;
                 if(count == 4){
                     if(cb())return;
                 }
             },this);
-            poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.25*i), ani, endFun));
+            poker.getComponent('Poker').node.runAction(cc.sequence(cc.delayTime(0.1*i), endFun, ani));
         };
     },
 
@@ -142,9 +141,10 @@ cc.Class({
         poker.getComponent('Poker').init(onePoker);
         poker.getComponent('Poker').node.setPosition(this.getTableForNodePos());
         this.pokers.push(poker);
+        poker.scale = 0.3;
         this.node.addChild(poker);
         var endPos = cc.p(4*poker.width, 0);
-        poker.getComponent('Poker').node.runAction(cc.moveTo(0.8, endPos));
+        poker.getComponent('Poker').node.runAction(cc.spawn(cc.moveTo(0.5, endPos), cc.scaleTo(0.5,1)));
     },
 
     updataPoker:function (pokersData) {
