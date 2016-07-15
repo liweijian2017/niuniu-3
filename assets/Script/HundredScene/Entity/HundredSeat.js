@@ -70,6 +70,7 @@ cc.Class({
     _handleClick:function(event){
         if(HundredData['seats'][this.id].isHold)return;
         if(HundredData['currentSeatId'] < 5)return;
+        if(HundredData['handlePanel']['point']<HundredData['minSitdownBuyin'])return;
         Game.socket.sendSitDown_Hundred(this.id);
     },
     //收金币

@@ -32,6 +32,7 @@ cc.Class({
         }
     },
     onLoad: function () {
+        console.log('百人场初始化');
         this.fsm = HundredStates.instance({
             onopenRoom:this._openRoom.bind(this), //加载房间
             onopenBet:this._openBet.bind(this), //打开下注区
@@ -102,6 +103,7 @@ cc.Class({
     },
     //发牌,然后开牌
     _sendCards:function(){
+        this.betLayer.removeAllBetRequest();
         this.popLayer.closeToast();
         this.betLayer.sendPokers(function(){
             this.scheduleOnce(this.fsm.openCards.bind(this.fsm), 1); 
@@ -158,6 +160,7 @@ cc.Class({
             if(pack.playerList[k].seatId < 5 && pack.playerList[k].seatId > 0) { //有座位玩家
                 HundredData['seats'][pack.playerList[k].seatId]['name'] = pack.playerList[k].nick;
                 HundredData['seats'][pack.playerList[k].seatId]['point'] = pack.playerList[k].buyinChips;
+                HundredData['seats'][pack.playerList[k].seatId]['img'] = pack.playerList[k].img;
                 HundredData['seats'][pack.playerList[k].seatId]['isHold'] = true;
             }
             if(pack.playerList[k].seatId == pack.seatId){ //拿到自己的信息
@@ -169,7 +172,8 @@ cc.Class({
                     //HundredData['userPoint'] = pack.playerList[k].otherChips;
                 }else { //不是庄家
                     HundredData['handlePanel'].point = pack.playerList[k].buyinChips;
-                    //HundredData['userPoint'] = pack.playerList[k].buyinChips;
+                    HundredData['acceptChips'] = pack.playerList[k].buyinChips;
+                    // HundredData['userPoint'] = pack.playerList[k].buyinChips;
                 }
                 HundredData['handlePanel']['name'] = pack.playerList[k].nick;
             }
@@ -198,6 +202,8 @@ cc.Class({
     HUNDRED_SVR_GAME_START:function(pack){
         HundredData['syncBetData'].seatId = -1; //清空需要同步的信息
         HundredData['syncBetData'].bets = []; //清空需要同步的信息
+        // console.log('庄家可接受下注: ' + pack.acceptChips);
+        HundredData['acceptChips'] = pack.acceptChips;
         if(Http.userData.uid == pack.uid){ //自己是庄家
             if(HundredData['handlePanel'].type == 1){ //当时是坐下的
                 HundredData['seats'][HundredData['currentSeatId']]['isHold'] = false;
@@ -300,33 +306,35 @@ cc.Class({
         }
         this.fsm.sendCards();
     },
-    //批量下注成功
+    //下注成功
     HUNDRED_SVR_MULTI_BET_SUCCESS:function(pack){
+        HundredData['acceptChips'] = pack.meAcceptChips < pack.dealerAcceptChips ? pack.meAcceptChips : pack.dealerAcceptChips;
         for(var k in pack.betsResult){
             var bet = pack.betsResult[k];
             HundredData['betAreas'][bet.potId].selfPoint = bet.betChips;
-            // this.betLayer.sendPoint(5, bet.potId-1, this.betLayer._chipsToGold(bet.betChips));
+            this.betLayer.sendPoint(5, bet.potId-1, this.betLayer._chipsToGold(bet.betChips));
         }
         HundredData['isAttend'] = true;
     },
     //下注失败
     HUNDRED_SVR_BET_FAIL:function(pack){
         console.log('下注失败');
+        HundredData['acceptChips'] = pack.acceptChips;
         console.log(pack);
     },
     //坐下成功
     HUNDRED_SVR_SIT_DOWN:function(pack){ 
         HundredData['seats'][pack.seatId]['isHold'] = true;
-        HundredData['seats'][pack.seatId]['name'] = pack.nick;
-        HundredData['seats'][pack.seatId]['point'] = pack.buyinChips;
-        HundredData['seats'][pack.seatId]['img'] = pack.img;
-        HundredData['seats'][pack.seatId]['uid'] = pack.uid;
         //如果是自己坐下,操控面板处理
         if(pack.uid == Http.userData.uid){
             this.popLayer.showHint('坐下成功');
             HundredData['currentSeatId'] = pack.seatId;//更新自己的座位id
             HundredData['handlePanel']['type'] = 1;
         }
+        HundredData['seats'][pack.seatId]['name'] = pack.nick;
+        HundredData['seats'][pack.seatId]['point'] = pack.buyinChips;
+        HundredData['seats'][pack.seatId]['img'] = pack.img;
+        HundredData['seats'][pack.seatId]['uid'] = pack.uid;
     },
     //坐下失败
     HUNDRED_SVR_SIT_DOWN_FAIL:function(pack){
@@ -346,7 +354,7 @@ cc.Class({
             if(pack.bets[k].betChips > HundredData['betAreas'][pack.bets[k].potId].point) { //奖池有人投注了
                 var changePoint = pack.bets[k].betChips - HundredData['betAreas'][pack.bets[k].potId].point;
                 var seatId = pack.bets[k].seatId;
-                console.log((seatId>5?5:seatId) + '座位下注 :' + changePoint + '筹码,到' + pack.bets[k].potId + '奖池;');
+                // console.log((seatId>5?5:seatId) + '座位下注 :' + changePoint + '筹码,到' + pack.bets[k].potId + '奖池;');
                 this.betLayer.sendPoint((seatId>5?6:seatId), pack.bets[k].potId-1, this.betLayer._chipsToGold(changePoint));
             }
         }
@@ -365,7 +373,6 @@ cc.Class({
     },
     //站起成功
     HUNDRED_SVR_STAND_UP:function(pack){ 
-        HundredData['seats'][pack.seatId]['isHold'] = false;
         HundredData['seats'][pack.seatId]['uid'] = 0;
         //处理操控面板
         if(HundredData['currentSeatId'] == pack.seatId){
@@ -374,6 +381,7 @@ cc.Class({
             HundredData['currentSeatId'] = 99;
             HundredData['handlePanel']['type'] = 0;
         }
+        HundredData['seats'][pack.seatId]['isHold'] = false;
     },
     //站起失败
     HUNDRED_SVR_STAND_UP_FAIL:function(pack){ 
@@ -430,7 +438,10 @@ cc.Class({
     //0:正常, 1:超时 2:没钱
     HUNDRED_SVR_LEAVE_RET:function(pack){ 
         console.log('离开房间');
-        console.log(pack);
+        // console.log(pack);
+        HundredData['handlePanel'].preType = -2
+        HundredData['handlePanel']['type'] = -1;
+        HundredData.removeAllHandles();
         cc.director.loadScene('MainScene');
     },
     //中途离开房间

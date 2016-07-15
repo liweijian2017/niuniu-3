@@ -1,7 +1,9 @@
 //百人场数据
-module.exports = require('DataMonitoring').extend({
+
+var HundredData = require('DataMonitoring').extend({
+    'dataName':'HundredData',
     'isAttend':false, //是否参加下注
-    'acceptChips':0, //最高下注值
+    'acceptChips':0, //玩家最高下注值
     'currentSeatId':-1, //默认-1, 0:庄家; 1-4:有座; 99:无座
     'minSitdownBuyin':1000000000, //默认坐下最小值  10亿 
     'minDealerBuyin':1000000000, //默认上庄最小值  10亿 
@@ -159,3 +161,4 @@ module.exports = require('DataMonitoring').extend({
         luckPokers:[], //最新的幸运奖池数
     },
 });
+module.exports = HundredData;

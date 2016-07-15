@@ -48,7 +48,6 @@ cc.Class({
     onLoad: function () {
         console.log('百人场-启动-操控面板...');
         this._pouringBtns = this.node.getChildByName('PouringBtns'); //下注按钮容器
-        // HundredData.bindCallF('handlePanel', this._updateView.bind(this));
         HundredData.bindCallF('handlePanel:point', this._updatePoint.bind(this));
         HundredData.bindCallF('handlePanel:name', this._updateName.bind(this));
         HundredData.bindCallF('handlePanel:score', this._updateScore.bind(this));
@@ -57,6 +56,8 @@ cc.Class({
         HundredData.bindCallF('handlePanel:2:gain', this._updateGain.bind(this));
         HundredData.bindCallF('handlePanel:2:lose', this._updateLose.bind(this));
         HundredData.bindCallF('handlePanel:2:total', this._updateTotal.bind(this));
+        //下注限制
+        HundredData.bindCallF('acceptChips', this._updateAcceptChips.bind(this));
     },
 
     _updatePoint:function(point){
@@ -76,6 +77,7 @@ cc.Class({
     },
     //操控面板类型变化
     _updateType:function(type){
+        console.log('操作面板: ' + type);
         if(type != HundredData['handlePanel'].preType){ //先隐藏
             if(HundredData['handlePanel'].preType == -2) { //第一次加载不做动画
                 this.node.setScale(1,0);
@@ -121,6 +123,11 @@ cc.Class({
         return total;
     },
 
+    _updateAcceptChips:function(acceptChips){
+        this.limitBetBtns(acceptChips);
+        return acceptChips;
+    },
+
     updateBetBtns:function(betValues){ //更新筹码按钮
         this._pouringBtns.removeAllChildren();
         this._betBtns = [];
@@ -144,21 +151,50 @@ cc.Class({
         }
     },
 
+    limitBetBtns:function(acceptChips){
+        if(this._betBtns.length == 0)return;
+        if(!acceptChips)acceptChips = HundredData['acceptChips'];
+        for(var k=this._betBtns.length-1; k>=0; k--){
+            if(this._betBtns[k].getComponent('BetBtn')._value > acceptChips){
+                this._betBtns[k].getComponent('BetBtn').setAttr('_isActive', false);
+                if(this._betBtns[k].getComponent('BetBtn')._isSelect){ //改变默认值
+                    this.selectBtn(k-1);
+                    // HundredData['handlePanel'].selectValue = this._betBtns[k-1].getComponent('BetBtn')._value;
+                }
+            }else {
+                this._betBtns[k].getComponent('BetBtn').setAttr('_isActive', true);
+            }
+        }
+    },
+
     _handleClick:function(event){
         if(!event.currentTarget.getComponent('BetBtn')._isActive)return;
         for(var k in this._betBtns){
             if(this._betBtns[k] === event.currentTarget){
-                event.currentTarget.getComponent('BetBtn').setAttr('_isSelect', true);
-                HundredData['handlePanel'].selectValue = event.currentTarget.getComponent('BetBtn')._value;
+                this.selectBtn(k);
+            }
+        }
+    },
+
+    selectBtn:function(index){
+        for(var k in this._betBtns){
+            if(k == index) {
+                this._betBtns[k].getComponent('BetBtn').setAttr('_isSelect', true);
+                HundredData['handlePanel'].selectValue = this._betBtns[k].getComponent('BetBtn')._value;
             }else {
                 this._betBtns[k].getComponent('BetBtn').setAttr('_isSelect', false);
             }
         }
     },
+
     //激活按钮
     open:function(){
         for(var k in this._betBtns){
-            this._betBtns[k].getComponent('BetBtn').setAttr('_isActive', true);
+            if(this._betBtns[k].getComponent('BetBtn')._value < HundredData['acceptChips']){
+                this._betBtns[k].getComponent('BetBtn').setAttr('_isActive', true);
+            }else {
+                this._betBtns[k].getComponent('BetBtn').setAttr('_isActive', false);
+            }
         }
     },
     //停止所有按钮的点击事件

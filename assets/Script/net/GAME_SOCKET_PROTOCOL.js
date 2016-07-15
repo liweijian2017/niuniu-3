@@ -453,162 +453,54 @@ P.HUNDRED_SVR_JOIN_SUCCESS = 0xa002
 CONFIG[P.HUNDRED_SVR_JOIN_SUCCESS] = {
     ver: 1,
     fmt:[
-        {
-            name: "seatId",
-            type: T.UINT
-        }, //分配的座位ID
-        {
-            name: "blind",
-            type: T.ULONG
-        }, //盲注
-        {
-            name: "minBuyIn",
-            type: T.ULONG
-        }, //最小携带
-        {
-            name: "maxBuyIn",
-            type: T.ULONG
-        }, //最大携带
-        {
-            name: "roomName",
-            type: T.STRING
-        }, //房间名字
-        {
-            name: "roomType",
-            type: T.UINT
-        }, //房间场别
-        {
-            name: "roomField",
-            type: T.UINT
-        }, //房间级别
-        {
-            name: "seatNum",
-            type: T.BYTE
-        }, //座位数
-        {
-            name: "gameStatus",
-            type: T.BYTE
-        }, //游戏状态
-        {
-            name: "betExpire",
-            type: T.INT
-        }, //下注最大时间
-        {
-            name: "minDealerBuyin",
-            type: T.ULONG
-        }, //庄家最小携带
-        {
-            name: "minSitdownBuyin",
-            type: T.ULONG
-        }, //坐下最小携带
-        {
-            name: "inApplyDealer",
-            type: T.UINT
-        }, //0:不在申请庄列表 1:反之
+        {name : "seatId",     type : T.UINT},   //分配的座位ID
+        {name : "blind",      type : T.ULONG},  //盲注
+        {name : "minBuyIn",   type : T.ULONG},  //最小携带
+        {name : "maxBuyIn",   type : T.ULONG},  //最大携带
+        {name : "roomName",   type : T.STRING}, //房间名字
+        {name : "roomType",   type : T.UINT},   //房间场别
+        {name : "roomField",  type : T.UINT},   //房间级别
+        {name : "seatNum",    type : T.BYTE},   //座位数
+        {name : "gameStatus", type : T.BYTE},   //游戏状态
+        {name : "betExpire",  type : T.INT},    //下注最大时间
+        {name : "minDealerBuyin",   type : T.ULONG},  //庄家最小携带
+        {name : "minSitdownBuyin",  type : T.ULONG},  //坐下最小携带
+        {name : "inApplyDealer",    type : T.UINT},   //0:不在申请庄列表 1:反之
         { // 投注池信息
             name: "pots",
             type: T.ARRAY,
             fmt:[
-                {
-                    name: "potId",
-                    type: T.UINT
-                }, //投注池ID
-                {
-                    name: "totalChips",
-                    type: T.ULONG
-                }, //已投注的总金额
-                {
-                    name: "meBetChips",
-                    type: T.ULONG
-                }, //我的投注金额
+                {name : "potId",      type : T.UINT},  //投注池ID
+                {name : "totalChips", type : T.ULONG}, //已投注的总金额
+                {name : "meBetChips", type : T.ULONG}, //我的投注金额
             ]
         },
         { // 玩家的信息(前九个座位 + 自己的信息)
             name: "playerList",
             type: T.ARRAY,
             fmt:[
-                {
-                    name: "seatId",
-                    type: T.UINT
-                }, //座位ID
-                {
-                    name: "uid",
-                    type: T.UINT
-                }, //用户id
-                {
-                    name: "nick",
-                    type: T.STRING
-                }, //用户昵称
-                {
-                    name: "vip",
-                    type: T.BYTE
-                }, //VIP标识
-                {
-                    name: "img",
-                    type: T.STRING
-                }, //用户头像
-                {
-                    name: "gender",
-                    type: T.STRING
-                }, //用户性别
-                {
-                    name: "buyinChips",
-                    type: T.ULONG
-                }, //买入筹码数
-                {
-                    name: "platFlag",
-                    type: T.INT
-                }, //平台标识
-                {
-                    name: "giftId",
-                    type: T.INT
-                }, //礼物ID
-                {
-                    name: "exp",
-                    type: T.UINT
-                }, //用户经验
-                {
-                    name: "win",
-                    type: T.UINT
-                }, //用户赢局数
-                {
-                    name: "lose",
-                    type: T.UINT
-                }, //用户输局数
-                {
-                    name: "diamondCount",
-                    type: T.ULONG
-                }, //钻石
-                {
-                    name: "extInfo",
-                    type: T.STRING
-                }, //用户所在地
-                {
-                    name: "homeTown",
-                    type: T.STRING
-                }, //用户家乡
-                {
-                    name: "totalWinChips",
-                    type: T.ULONG
-                }, //游戏期间总赢取
-                {
-                    name: "totalLoseChips",
-                    type: T.LONG
-                }, //游戏期间总输钱
-                {
-                    name: "otherChips",
-                    type: T.ULONG
-                }, //未带入庄位的筹码
-                {
-                    name: "totalAddBuyin",
-                    type: T.ULONG
-                }, //追加带入的筹码
+                {name : "seatId",           type : T.UINT},    //座位ID
+                {name : "uid",              type : T.UINT},    //用户id
+                {name : "nick",             type : T.STRING},  //用户昵称
+                {name : "vip",              type : T.BYTE},    //VIP标识
+                {name : "img",              type : T.STRING},  //用户头像
+                {name : "gender",           type : T.STRING} , //用户性别
+                {name : "buyinChips",       type : T.ULONG},   //买入筹码数
+                {name : "platFlag",         type : T.INT},     //平台标识
+                {name : "giftId",           type : T.INT},     //礼物ID
+                {name : "exp",              type : T.UINT},    //用户经验
+                {name : "win",              type : T.UINT},    //用户赢局数
+                {name : "lose",             type : T.UINT},    //用户输局数
+                {name : "diamondCount",     type : T.ULONG},   //钻石
+                {name : "extInfo",          type : T.STRING},  //用户所在地
+                {name : "homeTown",         type : T.STRING},  //用户家乡
+                {name : "totalWinChips",    type : T.ULONG},   //游戏期间总赢取
+                {name : "totalLoseChips",   type : T.LONG},    //游戏期间总输钱
+                {name : "otherChips",       type : T.ULONG},   //未带入庄位的筹码
+                {name : "totalAddBuyin",    type : T.ULONG},   //追加带入的筹码
             ]
         },
-        {
-            name: "luckPotChips",
-            type: T.ULONG
-        }, //最新的幸运奖池数
+        {name: "luckPotChips", type: T.ULONG }, //最新的幸运奖池数
     ]
 }
 
@@ -639,66 +531,21 @@ P.HUNDRED_SVR_SIT_DOWN = 0xa005
 CONFIG[P.HUNDRED_SVR_SIT_DOWN] = {
     ver: 1,
     fmt:[
-        {
-            name: "seatId",
-            type: T.UINT
-        }, //座位ID
-        {
-            name: "uid",
-            type: T.UINT
-        }, //用户id
-        {
-            name: "nick",
-            type: T.STRING
-        }, //用户昵称
-        {
-            name: "vip",
-            type: T.BYTE
-        }, //VIP标识
-        {
-            name: "img",
-            type: T.STRING
-        }, //用户头像
-        {
-            name: "gender",
-            type: T.STRING
-        }, //用户性别
-        {
-            name: "buyinChips",
-            type: T.ULONG
-        }, //买入筹码数
-        {
-            name: "platFlag",
-            type: T.INT
-        }, //平台标识
-        {
-            name: "giftId",
-            type: T.INT
-        }, //礼物ID
-        {
-            name: "exp",
-            type: T.UINT
-        }, //用户经验
-        {
-            name: "win",
-            type: T.UINT
-        }, //用户赢局数
-        {
-            name: "lose",
-            type: T.UINT
-        }, //用户输局数
-        {
-            name: "diamondCount",
-            type: T.ULONG
-        }, //钻石
-        {
-            name: "extInfo",
-            type: T.STRING
-        }, //用户所在地
-        {
-            name: "homeTown",
-            type: T.STRING
-        }, //用户家乡
+        {name : "seatId",       type : T.UINT},    //座位ID
+        {name : "uid",          type : T.UINT},    //用户id
+        {name : "nick",         type : T.STRING},  //用户昵称
+        {name : "vip",          type : T.BYTE},    //VIP标识
+        {name : "img",          type : T.STRING},  //用户头像
+        {name : "gender",       type : T.STRING} , //用户性别
+        {name : "buyinChips",   type : T.ULONG},   //买入筹码数
+        {name : "platFlag",     type : T.INT},     //平台标识
+        {name : "giftId",       type : T.INT},     //礼物ID
+        {name : "exp"       , type : T.UINT}   , //用户经验
+        {name : "win"       , type : T.UINT}   , //用户赢局数
+        {name : "lose"      , type : T.UINT}   , //用户输局数
+        {name : "diamondCount", type : T.ULONG},   //钻石
+        {name : "extInfo"  ,    type : T.STRING} , //用户所在地
+        {name : "homeTown"  ,   type : T.STRING} , //用户家乡
     ],
 }
 //坐下失败

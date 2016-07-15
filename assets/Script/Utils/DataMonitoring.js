@@ -1,5 +1,5 @@
 var DataMonitoring = {};
-
+DataMonitoring.dataMap = {}; //存储用户的原始数据
 //处理链条对象
 var HandleChain = function(handle){
     this.handles = [handle]; //数组存储
@@ -17,6 +17,7 @@ var HandleChain = function(handle){
     return this;
 };
 DataMonitoring.extend = function(bindData){
+    DataMonitoring.dataMap[bindData.dataName] = JSON.parse(JSON.stringify(bindData));;
     bindData._handleChainMap = {}; //对应path的处理链条地图
     bindData._handleList = {}; //对应handeName的数据修改句柄
     bindData.bindCallF = function(handleName, path, handle){
@@ -82,6 +83,14 @@ DataMonitoring.extend = function(bindData){
         var arr = path.split(':');
         return arr[arr.length-1];
     }
+    bindData.removeAllHandles = function(){
+        bindData._handleChainMap = {};
+        bindData._handleList = {};
+    }
+    // //欢迎开始的数据
+    // bindData.initialize = function(){
+    //     bindData = DataMonitoring.dataMap[bindData.dataName];
+    // }
     return bindData;
 }
 

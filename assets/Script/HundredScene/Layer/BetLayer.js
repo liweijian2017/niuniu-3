@@ -44,8 +44,9 @@ cc.Class({
             var chuma = cc.instantiate(this.chumaPrefab);
             this.chumaPool.put(chuma);
         }
-        //开启下注请求发送器
-        this.schedule(this._handleAllBetRequests.bind(this), 1);
+        //定时处理下注请求列表
+        this.schedule(this._handleAllBetRequests.bind(this), 0.3);
+
         //监听自己下注
         this.node.on('SEND_POINT', function(event){
             var msg  = event.getUserData();
@@ -282,8 +283,10 @@ cc.Class({
     },
     //处理所有的下注请求
     _handleAllBetRequests:function(){
-        for(var k in this.betAreas){
-            this.betAreas[k].handleBetRequest();
+        if(HundredStates.getFsm().is('WaitingBet')){
+            for(var k in this.betAreas){
+                this.betAreas[k].handleBetRequest();
+            }
         }
     },
     restoreBetChips:function(){
@@ -320,7 +323,6 @@ cc.Class({
             }
         }, 2.5);
     },
-
     hintChumaChange:function(){
         var changeList = HundredData['seatChangeList'];
         for(var j in changeList){
@@ -335,6 +337,12 @@ cc.Class({
                     HundredData['handlePanel'].point = changeList[j].buyinChips;
             }
         }
-    }
+    },
+    //清空下注请求列表
+    removeAllBetRequest:function(){
+        for(var k in this.betAreas){
+                this.betAreas[k].removeBetRequest();
+        }
+    },
 
 });

@@ -89,11 +89,8 @@ cc.Class({
     //下注动作
     _handleClick:function(event){
         if(!HundredData['betAreas'][this.id].isActive)return;
+        if(HundredData['handlePanel'].selectValue > HundredData['acceptChips'])return;
         this._betRequests.push({potId:this.id, betChips:HundredData['handlePanel'].selectValue});
-        //金币效果
-        var event =  new cc.Event.EventCustom('SEND_POINT', true);
-        event.setUserData({id:this.id-1, selectValue:HundredData['handlePanel'].selectValue});
-        this.node.dispatchEvent(event);
     },
     //添加筹码
     addGold:function(node){
@@ -111,6 +108,10 @@ cc.Class({
         if(HundredData['currentSeatId'] == 0)return; //自己是庄家
         Game.socket.sendBetChips_Hundred(this._betRequests);
         this._betRequests = []; //请求已经处理的
+    },
+    removeBetRequest:function(){
+        if(this._betRequests.length > 0)
+            this._betRequests = []; //请求已经处理的
     },
     getChumaNum:function(){
         return this._golds.length;

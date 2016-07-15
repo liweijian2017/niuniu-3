@@ -22,7 +22,7 @@ if(!window.USERDATA){
 	window.USERDATA = {
 		point: 1500,
 		score: 0,
-		uid:   9,  //544, 4087, 4203, 7490
+		uid:   10,  //544, 4087, 4203, 7490
 		sk:    'abc58ipalmplay85abc',
 		name:  '测试号哈',
 		image:　'http://game.manyouwei.cn/assets/photo/n4203.jpg',
@@ -37,7 +37,8 @@ if(!window.CONFIGDATA){
     apiUrl: "http://game-dev.manyouwei.cn/dice/api.php",
     roomList: 'http://game.manyouwei.cn/assets/niuniu/roomlist/20160517192004.json',
     actJson: 'http://game-dev.manyouwei.cn/assets/niuniu/act/201606242445.json',
-    serverList: [['192.168.1.100', '9902'], ['192.168.1.100', '9902']]
+    serverList: [['192.168.1.100', '9902'], ['192.168.1.100', '9902']],
+    hgChips:1000000,
   };
 }
 //end debug data

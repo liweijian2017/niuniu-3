@@ -17,8 +17,12 @@ var BroadcastReceiver = {
                 // console.log('主场景加载完毕');
                 cc.director.preloadScene('TableScene', function(err){
                     if(err)console.err(err);
-                    // console.log('桌子场景预加载完毕');
+                    console.log('牛牛场景预加载完毕');
                 });
+                // cc.director.preloadScene('HundredScene', function(err){
+                //     if(err)console.err(err);
+                //     console.log('百人场场景预加载完毕');
+                // });
             }
         });
         BroadcastReceiver.isInit = true;
